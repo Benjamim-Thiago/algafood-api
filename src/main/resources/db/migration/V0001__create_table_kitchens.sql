@@ -1,0 +1,13 @@
+CREATE TABLE kitchens (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL
+);
+
+INSERT INTO kitchens(name)VALUES('BRASILEIRA');
+INSERT INTO kitchens(name)VALUES('HOLANDESA');
+INSERT INTO kitchens(name)VALUES('INGLESA');
+INSERT INTO kitchens(name)VALUES('JAPONESA');
+INSERT INTO kitchens(name)VALUES('ITALIANA');
+INSERT INTO kitchens(name)VALUES('ÁRABE');
+INSERT INTO kitchens(name)VALUES('THAILANDESA');
+ 

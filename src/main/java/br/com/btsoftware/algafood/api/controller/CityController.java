@@ -2,6 +2,8 @@ package br.com.btsoftware.algafood.api.controller;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,77 +19,80 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
 import br.com.btsoftware.algafood.domain.exception.EntityNotFoundExeception;
+import br.com.btsoftware.algafood.domain.model.City;
 import br.com.btsoftware.algafood.domain.model.State;
-import br.com.btsoftware.algafood.domain.repository.StateRepository;
-import br.com.btsoftware.algafood.domain.service.StateService;
+import br.com.btsoftware.algafood.domain.repository.CityRepository;
+import br.com.btsoftware.algafood.domain.service.CityService;
 
 @RestController
-@RequestMapping("states")
-public class StateController {
-	@Autowired
-	private StateRepository stateRepository;
+@RequestMapping("/cities")
+public class CityController {
 
 	@Autowired
-	private StateService stateService;
-
+	private CityRepository cityRepository;
+	
+	@Autowired
+	private CityService cityService;
+	
 	@GetMapping
-	public ResponseEntity<List<State>> list() {
-		return ResponseEntity.ok(stateRepository.list());
-	}
-
+	public ResponseEntity<List<City>> list() {
+		return ResponseEntity.ok(cityRepository.list());
+	}	
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<State> find(@PathVariable Long id) {
-		State state = stateRepository.find(id);
+	public ResponseEntity<City> find(@PathVariable Long id) {
+		City city = cityRepository.find(id);
 
-		if (state != null) {
-			return ResponseEntity.ok(state);
+		if (city != null) {
+			return ResponseEntity.ok(city);
 		}
 
 		return ResponseEntity.notFound().build();
 	}
 
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody State state) {
+	public ResponseEntity<?> save(@RequestBody City city) {
 		try {
 
-			state = stateService.save(state);
+			city = cityService.save(city);
 
-			return ResponseEntity.status(HttpStatus.CREATED).body(state);
+			return ResponseEntity.status(HttpStatus.CREATED).body(city);
 		} catch (EntityNotFoundExeception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody State state) {
+	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody City city) {
 		try {
-			State stateInDatabase = stateRepository.find(id);
-			if (stateInDatabase != null) {
+
+			City cityInDatabase =  cityRepository.find(id);
+			if (cityInDatabase != null) {
+				BeanUtils.copyProperties(city, cityInDatabase, "id");
+
+				city = cityService.save(cityInDatabase);
+				return ResponseEntity.ok(city);
 				
-				BeanUtils.copyProperties(state, stateInDatabase, "id");
-				
-				state = stateService.save(state);
-				return ResponseEntity.ok(state);				
 			}
+			
 			return ResponseEntity.notFound().build();
+
 		} catch (EntityNotFoundExeception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> remove (@PathVariable Long id) {
+	public ResponseEntity<City> remover(@PathVariable Long id) {
 		try {
-			stateService.remove(id);	
+			cityService.remove(id);	
 			return ResponseEntity.noContent().build();
 			
-		} catch (EntityNotFoundExeception e) {
+		} catch (EntityNotFoundException e) {
 			return ResponseEntity.notFound().build();
 			
 		} catch (EntityInUseException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT)
-					.body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}
-
 }

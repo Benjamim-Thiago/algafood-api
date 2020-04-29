@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
 import br.com.btsoftware.algafood.domain.exception.EntityNotFoundExeception;
 import br.com.btsoftware.algafood.domain.model.City;
-import br.com.btsoftware.algafood.domain.model.State;
 import br.com.btsoftware.algafood.domain.repository.CityRepository;
 import br.com.btsoftware.algafood.domain.service.CityService;
 

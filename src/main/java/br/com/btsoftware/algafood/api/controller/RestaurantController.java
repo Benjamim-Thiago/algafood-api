@@ -1,18 +1,24 @@
 package br.com.btsoftware.algafood.api.controller;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.btsoftware.algafood.domain.exception.EntityNotFoundExeception;
 import br.com.btsoftware.algafood.domain.model.Restaurant;
@@ -61,20 +67,52 @@ public class RestaurantController {
 	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
 		try {
 
-			Restaurant restaurantInDatabase =  restaurantRepository.find(id);
+			Restaurant restaurantInDatabase = restaurantRepository.find(id);
 			if (restaurantInDatabase != null) {
 				BeanUtils.copyProperties(restaurant, restaurantInDatabase, "id");
 
 				restaurant = restaurantService.save(restaurantInDatabase);
 				return ResponseEntity.ok(restaurant);
-				
+
 			}
-			
+
 			return ResponseEntity.notFound().build();
 
 		} catch (EntityNotFoundExeception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
+	}
+
+	@PatchMapping("/{id}")
+	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> filds) {
+
+		Restaurant restaurantInDatabase = restaurantRepository.find(id);
+		if (restaurantInDatabase == null) {
+			return ResponseEntity.notFound().build();
+		}
+
+		merge(filds, restaurantInDatabase);
+		
+		return update(id, restaurantInDatabase);
+
+	}
+
+	private void merge(Map<String, Object> oringinFilds, Restaurant destinyRestaurant) {
+		//Objeto de mapeamento
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		//Transforma os campos para os tipos existente na entidade Restaurant
+		Restaurant originRestaurant = objectMapper.convertValue(oringinFilds, Restaurant.class);
+
+		//Faz um loop atribuindo valores para objeto
+		oringinFilds.forEach((propertyName, propertyValue) -> {
+			Field field = ReflectionUtils.findField(Restaurant.class, propertyName);
+			field.setAccessible(true);
+
+			Object newValue = ReflectionUtils.getField(field, originRestaurant);
+
+			ReflectionUtils.setField(field, destinyRestaurant, newValue);
+		});
 	}
 
 }

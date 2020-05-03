@@ -1,6 +1,7 @@
 package br.com.btsoftware.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +35,15 @@ public class KitchenController {
 
 	@GetMapping()
 	public List<Kitchen> list() {
-		return kitchenRepository.list();
+		return kitchenRepository.findAll();
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Kitchen> find(@PathVariable Long id) {
-		Kitchen kitchen = kitchenRepository.find(id);
+		Optional<Kitchen> kitchen = kitchenRepository.findById(id);
 
-		if (kitchen != null) {
-			return ResponseEntity.ok(kitchen);
+		if (kitchen.isPresent()) {
+			return ResponseEntity.ok(kitchen.get());
 		}
 
 		return ResponseEntity.notFound().build();
@@ -58,11 +59,11 @@ public class KitchenController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Kitchen> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
-		Kitchen kitchenInDataBase = kitchenRepository.find(id);
+		Optional<Kitchen> kitchenInDataBase = kitchenRepository.findById(id);
 
-		if (kitchenInDataBase != null) {
-			BeanUtils.copyProperties(kitchen, kitchenInDataBase, "id");
-			return ResponseEntity.ok(kitchenService.save(kitchenInDataBase));
+		if (kitchenInDataBase.isPresent()) {
+			BeanUtils.copyProperties(kitchen, kitchenInDataBase.get(), "id");
+			return ResponseEntity.ok(kitchenService.save(kitchenInDataBase.get()));
 		} else {
 			return ResponseEntity.notFound().build();
 		}

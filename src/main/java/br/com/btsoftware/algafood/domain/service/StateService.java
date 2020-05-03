@@ -23,7 +23,7 @@ public class StateService {
 	
 	public void remove(Long id) {
 		try {
-			stateRepository.delete(id);
+			stateRepository.deleteById(id);
 
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntityNotFoundExeception(

@@ -1,6 +1,7 @@
 package br.com.btsoftware.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +33,15 @@ public class StateController {
 
 	@GetMapping
 	public ResponseEntity<List<State>> list() {
-		return ResponseEntity.ok(stateRepository.list());
+		return ResponseEntity.ok(stateRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<State> find(@PathVariable Long id) {
-		State state = stateRepository.find(id);
+		Optional<State> state = stateRepository.findById(id);
 
-		if (state != null) {
-			return ResponseEntity.ok(state);
+		if (state.isPresent()) {
+			return ResponseEntity.ok(state.get());
 		}
 
 		return ResponseEntity.notFound().build();
@@ -61,13 +62,12 @@ public class StateController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody State state) {
 		try {
-			State stateInDatabase = stateRepository.find(id);
-			if (stateInDatabase != null) {
+			Optional <State> stateInDatabase = stateRepository.findById(id);
+			if (stateInDatabase.isPresent()) {
 				
-				BeanUtils.copyProperties(state, stateInDatabase, "id");
+				BeanUtils.copyProperties(state, stateInDatabase.get(), "id");
 				
-				state = stateService.save(state);
-				return ResponseEntity.ok(state);				
+				return ResponseEntity.ok(stateService.save(stateInDatabase.get()));				
 			}
 			return ResponseEntity.notFound().build();
 		} catch (EntityNotFoundExeception e) {

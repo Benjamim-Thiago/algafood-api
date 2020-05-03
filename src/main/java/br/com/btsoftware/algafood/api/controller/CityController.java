@@ -1,6 +1,7 @@
 package br.com.btsoftware.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -35,15 +36,15 @@ public class CityController {
 	
 	@GetMapping
 	public ResponseEntity<List<City>> list() {
-		return ResponseEntity.ok(cityRepository.list());
+		return ResponseEntity.ok(cityRepository.findAll());
 	}	
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<City> find(@PathVariable Long id) {
-		City city = cityRepository.find(id);
+		Optional<City> city = cityRepository.findById(id);
 
-		if (city != null) {
-			return ResponseEntity.ok(city);
+		if (city.isPresent()) {
+			return ResponseEntity.ok(city.get());
 		}
 
 		return ResponseEntity.notFound().build();
@@ -65,11 +66,12 @@ public class CityController {
 	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody City city) {
 		try {
 
-			City cityInDatabase =  cityRepository.find(id);
+			Optional<City> cityInDatabase =  cityRepository.findById(id);
+			
 			if (cityInDatabase != null) {
-				BeanUtils.copyProperties(city, cityInDatabase, "id");
+				BeanUtils.copyProperties(city, cityInDatabase.get(), "id");
 
-				city = cityService.save(cityInDatabase);
+				city = cityService.save(cityInDatabase.get());
 				return ResponseEntity.ok(city);
 				
 			}

@@ -22,28 +22,24 @@ public class CityService {
 
 	public City save(City city) {
 		Long stateId = city.getState().getId();
-		State state = stateRepository.find(stateId);
-
-		if (state == null) {
-			throw new EntityNotFoundExeception(String.format("Não existe um estado com código %d", stateId));
-		}
+		State state = stateRepository.findById(stateId).orElseThrow(
+				() -> new EntityNotFoundExeception(String.format("Não existe um estado com código %d", stateId)));
 
 		city.setState(state);
 
 		return cityRepository.save(city);
 	}
-	
+
 	public void remove(Long id) {
 		try {
-			cityRepository.delete(id);
+			cityRepository.deleteById(id);
 
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntityNotFoundExeception(
-					String.format("Não existe um cadastro da Cidade com código %d",  id));
-		
+			throw new EntityNotFoundExeception(String.format("Não existe um cadastro da Cidade com código %d", id));
+
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityInUseException(
-					String.format("Cidade com código %d não pode ser removida, pois está em uso",  id));
+					String.format("Cidade com código %d não pode ser removida, pois está em uso", id));
 		}
 	}
 }

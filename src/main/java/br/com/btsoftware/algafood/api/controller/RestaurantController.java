@@ -3,6 +3,7 @@ package br.com.btsoftware.algafood.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +38,15 @@ public class RestaurantController {
 
 	@GetMapping
 	public ResponseEntity<List<Restaurant>> list() {
-		return ResponseEntity.ok(restaurantRepository.list());
+		return ResponseEntity.ok(restaurantRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Restaurant> find(@PathVariable Long id) {
-		Restaurant restaurant = restaurantRepository.find(id);
+		Optional<Restaurant> restaurant = restaurantRepository.findById(id);
 
-		if (restaurant != null) {
-			return ResponseEntity.ok(restaurant);
+		if (restaurant.isPresent()) {
+			return ResponseEntity.ok(restaurant.get());
 		}
 
 		return ResponseEntity.notFound().build();
@@ -67,11 +68,12 @@ public class RestaurantController {
 	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
 		try {
 
-			Restaurant restaurantInDatabase = restaurantRepository.find(id);
-			if (restaurantInDatabase != null) {
-				BeanUtils.copyProperties(restaurant, restaurantInDatabase, "id");
+			Optional<Restaurant> restaurantInDatabase = restaurantRepository.findById(id);
 
-				restaurant = restaurantService.save(restaurantInDatabase);
+			if (restaurantInDatabase.isPresent()) {
+				BeanUtils.copyProperties(restaurant, restaurantInDatabase.get(), "id");
+
+				restaurant = restaurantService.save(restaurantInDatabase.get());
 				return ResponseEntity.ok(restaurant);
 
 			}
@@ -86,25 +88,26 @@ public class RestaurantController {
 	@PatchMapping("/{id}")
 	public ResponseEntity<?> partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> filds) {
 
-		Restaurant restaurantInDatabase = restaurantRepository.find(id);
-		if (restaurantInDatabase == null) {
+		Optional<Restaurant> restaurantInDatabase = restaurantRepository.findById(id);
+
+		if (restaurantInDatabase.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		merge(filds, restaurantInDatabase);
-		
-		return update(id, restaurantInDatabase);
+		merge(filds, restaurantInDatabase.get());
+
+		return update(id, restaurantInDatabase.get());
 
 	}
 
 	private void merge(Map<String, Object> oringinFilds, Restaurant destinyRestaurant) {
-		//Objeto de mapeamento
+		// Objeto de mapeamento
 		ObjectMapper objectMapper = new ObjectMapper();
-		
-		//Transforma os campos para os tipos existente na entidade Restaurant
+
+		// Transforma os campos para os tipos existente na entidade Restaurant
 		Restaurant originRestaurant = objectMapper.convertValue(oringinFilds, Restaurant.class);
 
-		//Faz um loop atribuindo valores para objeto
+		// Faz um loop atribuindo valores para objeto
 		oringinFilds.forEach((propertyName, propertyValue) -> {
 			Field field = ReflectionUtils.findField(Restaurant.class, propertyName);
 			field.setAccessible(true);

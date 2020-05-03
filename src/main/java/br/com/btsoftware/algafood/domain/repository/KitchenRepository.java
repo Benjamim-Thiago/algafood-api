@@ -1,12 +1,9 @@
 package br.com.btsoftware.algafood.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.btsoftware.algafood.domain.model.Kitchen;
 
-public interface KitchenRepository {
-	List<Kitchen> list();
-	Kitchen find(Long id);
-	Kitchen save(Kitchen kitchen);
-	void delete(Long id);
+public interface KitchenRepository extends JpaRepository<Kitchen, Long>{
+	//List<Kitchen> searchPerName(String name);
 }

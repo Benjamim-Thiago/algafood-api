@@ -1,12 +1,11 @@
 package br.com.btsoftware.algafood.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import br.com.btsoftware.algafood.domain.model.State;
 
-public interface StateRepository {
-	List<State> list();
-	State find(Long id);
-	State save(State state);
-	void delete(Long id);
+@Repository
+public interface StateRepository extends JpaRepository<State, Long>{
+	
 }

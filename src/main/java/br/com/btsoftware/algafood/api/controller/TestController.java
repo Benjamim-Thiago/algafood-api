@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.btsoftware.algafood.domain.model.Restaurant;
 import br.com.btsoftware.algafood.domain.repository.RestaurantRepository;
+import br.com.btsoftware.algafood.infrastructure.repository.spec.RestaurantWithFreeDeliverySpec;
+import br.com.btsoftware.algafood.infrastructure.repository.spec.RestaurantWithNameSimilarSpec;
 
 @RestController
 @RequestMapping("/test")
@@ -22,5 +24,14 @@ public class TestController {
 			BigDecimal lastDeliveryFee) {
 
 		return restaurantRepository.find(name, firstDeliveryFee, lastDeliveryFee);
+	}
+
+	@GetMapping("/restaurants/restaurants-with-free-delivery")
+	public List<Restaurant> RestaurantswithFreeDelivery(String name) {
+
+		var withFreeDelivery = new RestaurantWithFreeDeliverySpec();
+		var withNameSimilar = new RestaurantWithNameSimilarSpec(name);
+
+		return restaurantRepository.findAll(withFreeDelivery.and(withNameSimilar));
 	}
 }

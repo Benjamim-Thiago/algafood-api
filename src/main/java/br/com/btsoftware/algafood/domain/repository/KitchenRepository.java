@@ -1,9 +1,7 @@
 package br.com.btsoftware.algafood.domain.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import br.com.btsoftware.algafood.domain.model.Kitchen;
 
-public interface KitchenRepository extends JpaRepository<Kitchen, Long>{
+public interface KitchenRepository extends CustomJpaRepository<Kitchen, Long>{
 	//List<Kitchen> searchPerName(String name);
 }

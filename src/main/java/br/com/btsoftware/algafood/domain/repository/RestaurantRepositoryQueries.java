@@ -7,4 +7,7 @@ import br.com.btsoftware.algafood.domain.model.Restaurant;
 
 public interface RestaurantRepositoryQueries {
 	List<Restaurant> find(String name, BigDecimal firstDeliveryFee, BigDecimal lastDeliveryFee);
+	
+	List<Restaurant> findWithFreeDelivery(String name);
+
 }

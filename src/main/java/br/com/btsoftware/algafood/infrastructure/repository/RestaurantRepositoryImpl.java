@@ -1,5 +1,8 @@
 package br.com.btsoftware.algafood.infrastructure.repository;
 
+import static br.com.btsoftware.algafood.infrastructure.repository.spec.RestaurantSpecs.withFreeDelivery;
+import static br.com.btsoftware.algafood.infrastructure.repository.spec.RestaurantSpecs.withNameSimilar;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +15,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import br.com.btsoftware.algafood.domain.model.Restaurant;
+import br.com.btsoftware.algafood.domain.repository.RestaurantRepository;
 import br.com.btsoftware.algafood.domain.repository.RestaurantRepositoryQueries;
 
 @Repository
@@ -23,6 +29,10 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
 	@PersistenceContext
 	private EntityManager manager;
 
+	@Autowired
+	@Lazy
+	private RestaurantRepository restaurantRepository;
+	
 	@Override
 	public List<Restaurant> find(String name, BigDecimal firstDeliveryFee, BigDecimal lastDeliveryFee) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
@@ -51,6 +61,12 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
 		TypedQuery<Restaurant> query = manager.createQuery(criteria);
 
 		return query.getResultList();
+	}
+
+	@Override
+	public List<Restaurant> findWithFreeDelivery(String name) {
+		return restaurantRepository.findAll(withFreeDelivery()
+				.and(withNameSimilar(name)));
 	}
 
 //	@Override

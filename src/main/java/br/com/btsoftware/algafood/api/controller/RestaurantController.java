@@ -1,6 +1,7 @@
 package br.com.btsoftware.algafood.api.controller;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -55,7 +56,6 @@ public class RestaurantController {
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody Restaurant restaurant) {
 		try {
-
 			restaurant = restaurantService.save(restaurant);
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(restaurant);
@@ -71,7 +71,9 @@ public class RestaurantController {
 			Optional<Restaurant> restaurantInDatabase = restaurantRepository.findById(id);
 
 			if (restaurantInDatabase.isPresent()) {
-				BeanUtils.copyProperties(restaurant, restaurantInDatabase.get(), "id", "paymentsMode");
+				restaurant.setUpdated(LocalDate.now());
+				BeanUtils.copyProperties(restaurant, restaurantInDatabase.get(), "id", 
+						"paymentsMode", "address", "created");
 
 				restaurant = restaurantService.save(restaurantInDatabase.get());
 				return ResponseEntity.ok(restaurant);

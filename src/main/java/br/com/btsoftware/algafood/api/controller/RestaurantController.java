@@ -73,7 +73,7 @@ public class RestaurantController {
 			if (restaurantInDatabase.isPresent()) {
 				restaurant.setUpdated(LocalDate.now());
 				BeanUtils.copyProperties(restaurant, restaurantInDatabase.get(), "id", 
-						"paymentsMode", "address", "created");
+						"paymentsMode", "address", "products", "created");
 
 				restaurant = restaurantService.save(restaurantInDatabase.get());
 				return ResponseEntity.ok(restaurant);

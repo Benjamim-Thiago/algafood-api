@@ -8,6 +8,7 @@ class AlgafoodApiApplicationTests {
 
 	@Test
 	void contextLoads() {
+		
 	}
 
 }

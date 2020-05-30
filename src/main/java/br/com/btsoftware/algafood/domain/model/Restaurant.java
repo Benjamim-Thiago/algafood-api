@@ -46,7 +46,7 @@ public class Restaurant {
 	private BigDecimal deliveryFee;
 
 	@ManyToOne
-	@JoinColumn(name = "kitchen_id")
+	@JoinColumn(name = "kitchen_id", nullable = false)
 	private Kitchen kitchen;
 
 	@JsonIgnore

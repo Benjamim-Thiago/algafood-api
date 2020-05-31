@@ -39,7 +39,10 @@ public class RestaurantController {
 
 	@GetMapping
 	public ResponseEntity<List<Restaurant>> list() {
-		return ResponseEntity.ok(restaurantRepository.findAll());
+		List<Restaurant> restaurants = restaurantRepository.findAll();
+		//System.out.println("Acozinha do primeiro restaurante é:");
+		//System.out.println(restaurants.get(0).getKitchen().getName());
+		return ResponseEntity.ok(restaurants);
 	}
 
 	@GetMapping("/{id}")
@@ -72,8 +75,8 @@ public class RestaurantController {
 
 			if (restaurantInDatabase.isPresent()) {
 				restaurant.setUpdated(LocalDate.now());
-				BeanUtils.copyProperties(restaurant, restaurantInDatabase.get(), "id", 
-						"paymentsMode", "address", "products", "created");
+				BeanUtils.copyProperties(restaurant, restaurantInDatabase.get(), "id", "paymentsMode", "address",
+						"products", "created");
 
 				restaurant = restaurantService.save(restaurantInDatabase.get());
 				return ResponseEntity.ok(restaurant);

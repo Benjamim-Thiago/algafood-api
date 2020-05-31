@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,7 +46,9 @@ public class Restaurant {
 	@Column(name = "delivery_fee")
 	private BigDecimal deliveryFee;
 
-	@ManyToOne
+	//@JsonIgnoreProperties("hibernateLazyInitializer")
+	//@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "kitchen_id", nullable = false)
 	private Kitchen kitchen;
 
@@ -53,8 +56,8 @@ public class Restaurant {
 	@Embedded
 	private Address address;
 	
-	@JsonIgnore
-	@ManyToMany
+	//@JsonIgnore
+	@ManyToMany()
 	@JoinTable(name = "restaurant_payment_mode", 
 			   joinColumns = @JoinColumn(name = "restaurant_id"), 
 			   inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))

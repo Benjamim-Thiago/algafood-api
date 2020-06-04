@@ -12,6 +12,6 @@ import br.com.btsoftware.algafood.domain.model.Restaurant;
 public interface RestaurantRepository
 		extends CustomJpaRepository<Restaurant, Long>, RestaurantRepositoryQueries, JpaSpecificationExecutor<Restaurant> {
 
-	@Query("FROM Restaurant r JOIN FETCH r.kitchen LEFT JOIN FETCH r.paymentsMode")
+	@Query("FROM Restaurant r JOIN FETCH r.kitchen")
 	List<Restaurant> findAll();
 }

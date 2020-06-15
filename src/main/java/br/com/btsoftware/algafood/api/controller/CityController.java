@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
 import br.com.btsoftware.algafood.domain.model.City;
 import br.com.btsoftware.algafood.domain.repository.CityRepository;
@@ -46,16 +47,23 @@ public class CityController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public City save(@RequestBody City city) {
-		return cityService.save(city);
+		try {
+			return cityService.save(city);
+		} catch (EntityNotFoundException e) {
+			throw new BusinessException(e.getMessage());
+		}
 	}
 
 	@PutMapping("/{id}")
 	public City update(@PathVariable Long id, @RequestBody City city) {
 		City cityInDatabase = cityService.findOrFail(id);
-
 		BeanUtils.copyProperties(city, cityInDatabase, "id");
 
-		return cityService.save(cityInDatabase);
+		try {
+			return cityService.save(cityInDatabase);
+		} catch (EntityNotFoundException e) {
+			throw new BusinessException(e.getMessage());
+		}
 	}
 
 	@DeleteMapping("/{id}")

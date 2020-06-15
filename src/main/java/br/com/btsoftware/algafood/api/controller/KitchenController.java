@@ -1,7 +1,6 @@
 package br.com.btsoftware.algafood.api.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
-import br.com.btsoftware.algafood.domain.exception.EntityNotFoundExeception;
 import br.com.btsoftware.algafood.domain.model.Kitchen;
 import br.com.btsoftware.algafood.domain.repository.KitchenRepository;
 import br.com.btsoftware.algafood.domain.service.KitchenService;
@@ -40,14 +36,8 @@ public class KitchenController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Kitchen> find(@PathVariable Long id) {
-		Optional<Kitchen> kitchen = kitchenRepository.findById(id);
-
-		if (kitchen.isPresent()) {
-			return ResponseEntity.ok(kitchen.get());
-		}
-
-		return ResponseEntity.notFound().build();
+	public Kitchen find(@PathVariable Long id) {
+		return kitchenService.findOrFail(id);
 	}
 
 	@PostMapping
@@ -59,15 +49,10 @@ public class KitchenController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Kitchen> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
-		Optional<Kitchen> kitchenInDataBase = kitchenRepository.findById(id);
-
-		if (kitchenInDataBase.isPresent()) {
-			BeanUtils.copyProperties(kitchen, kitchenInDataBase.get(), "id");
-			return ResponseEntity.ok(kitchenService.save(kitchenInDataBase.get()));
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+	public Kitchen update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
+		Kitchen kitchenInDataBase = kitchenService.findOrFail(id);
+		BeanUtils.copyProperties(kitchen, kitchenInDataBase, "id");
+		return kitchenService.save(kitchenInDataBase);
 
 	}
 

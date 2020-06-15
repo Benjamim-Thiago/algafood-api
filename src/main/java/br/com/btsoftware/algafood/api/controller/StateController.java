@@ -1,7 +1,6 @@
 package br.com.btsoftware.algafood.api.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
@@ -37,56 +37,36 @@ public class StateController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<State> find(@PathVariable Long id) {
-		Optional<State> state = stateRepository.findById(id);
-
-		if (state.isPresent()) {
-			return ResponseEntity.ok(state.get());
-		}
-
-		return ResponseEntity.notFound().build();
+	public State find(@PathVariable Long id) {
+		return stateService.findOrFail(id);
 	}
 
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody State state) {
-		try {
-
-			state = stateService.save(state);
-
-			return ResponseEntity.status(HttpStatus.CREATED).body(state);
-		} catch (EntityNotFoundExeception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+	@ResponseStatus(HttpStatus.CREATED)
+	public State save(@RequestBody State state) {
+		return stateService.save(state);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody State state) {
-		try {
-			Optional <State> stateInDatabase = stateRepository.findById(id);
-			if (stateInDatabase.isPresent()) {
-				
-				BeanUtils.copyProperties(state, stateInDatabase.get(), "id");
-				
-				return ResponseEntity.ok(stateService.save(stateInDatabase.get()));				
-			}
-			return ResponseEntity.notFound().build();
-		} catch (EntityNotFoundExeception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+	public State update(@PathVariable Long id, @RequestBody State state) {
+		State stateInDatabase = stateService.findOrFail(id);
+
+		BeanUtils.copyProperties(state, stateInDatabase, "id");
+
+		return stateService.save(stateInDatabase);
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> remove (@PathVariable Long id) {
+	public ResponseEntity<?> remove(@PathVariable Long id) {
 		try {
-			stateService.remove(id);	
+			stateService.remove(id);
 			return ResponseEntity.noContent().build();
-			
+
 		} catch (EntityNotFoundExeception e) {
 			return ResponseEntity.notFound().build();
-			
+
 		} catch (EntityInUseException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT)
-					.body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
 	}
 

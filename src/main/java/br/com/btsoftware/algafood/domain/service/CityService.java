@@ -10,21 +10,22 @@ import br.com.btsoftware.algafood.domain.exception.EntityNotFoundExeception;
 import br.com.btsoftware.algafood.domain.model.City;
 import br.com.btsoftware.algafood.domain.model.State;
 import br.com.btsoftware.algafood.domain.repository.CityRepository;
-import br.com.btsoftware.algafood.domain.repository.StateRepository;
 
 @Service
 public class CityService {
-	@Autowired
-	private StateRepository stateRepository;
+	private static final String CITY_IN_USE_MESSAGE = "Cidade com código %d não pode ser removida, pois está em uso";
 
+	private static final String CITY_NOT_FOUND_MESSAGE = "Não existe um cadastro da Cidade com código %d";
+
+	@Autowired
+	private StateService stateService;
+	
 	@Autowired
 	private CityRepository cityRepository;
 
 	public City save(City city) {
 		Long stateId = city.getState().getId();
-		State state = stateRepository.findById(stateId).orElseThrow(
-				() -> new EntityNotFoundExeception(String.format("Não existe um estado com código %d", stateId)));
-
+		State state = stateService.findOrFail(stateId);
 		city.setState(state);
 
 		return cityRepository.save(city);
@@ -35,11 +36,19 @@ public class CityService {
 			cityRepository.deleteById(id);
 
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntityNotFoundExeception(String.format("Não existe um cadastro da Cidade com código %d", id));
+			throw new EntityNotFoundExeception(String.format(CITY_NOT_FOUND_MESSAGE, id));
 
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityInUseException(
-					String.format("Cidade com código %d não pode ser removida, pois está em uso", id));
+					String.format(CITY_IN_USE_MESSAGE, id));
 		}
+	}
+	
+	public City findOrFail(Long id) {
+		return cityRepository.findById(id).orElseThrow(
+					() -> new EntityNotFoundExeception(
+							String.format(CITY_NOT_FOUND_MESSAGE, id)
+						)
+				);
 	}
 }

@@ -13,6 +13,8 @@ import br.com.btsoftware.algafood.domain.repository.StateRepository;
 @Service
 public class StateService {
 
+	private static final String STATE_IN_USE_MESSAGE = "Estado com código %d não pode ser removida, pois está em uso";
+	private static final String STATE_NOT_FOUND_MESSAGE = "Não existe um cadastro de Estado com código %d";
 	@Autowired
 	private StateRepository stateRepository;
 	
@@ -27,12 +29,20 @@ public class StateService {
 
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntityNotFoundExeception(
-					String.format("Não existe um cadastro de Estado com código %d",  id));
+					String.format(STATE_NOT_FOUND_MESSAGE,  id));
 		
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityInUseException(
-					String.format("Estado com código %d não pode ser removida, pois está em uso",  id));
+					String.format(STATE_IN_USE_MESSAGE,  id));
 		}
+	}
+	
+	public State findOrFail(Long id) {
+		return stateRepository.findById(id).orElseThrow(
+				() -> new EntityNotFoundExeception(
+							String.format(STATE_NOT_FOUND_MESSAGE,  id)
+						)
+				);
 	}
 
 }

@@ -13,6 +13,8 @@ import br.com.btsoftware.algafood.domain.repository.KitchenRepository;
 @Service
 public class KitchenService {
 
+	private static final String KITCHEN_IN_USE_MESSAGE = "Cozinha de código %d não pode ser removida, pois está em uso";
+	private static final String KITCHEN_NOT_FOUND_MESSAGE = "Não existe um cadastro de cozinha com código %d";
 	@Autowired
 	private KitchenRepository kitchenRepository;
 
@@ -26,11 +28,18 @@ public class KitchenService {
 
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntityNotFoundExeception(
-					String.format("Não existe um cadastro de cozinha com código %d",  id));
+					String.format(KITCHEN_NOT_FOUND_MESSAGE,  id));
 		
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityInUseException(
-					String.format("Cozinha de código %d não pode ser removida, pois está em uso",  id));
+					String.format(KITCHEN_IN_USE_MESSAGE,  id));
 		}
+	}
+	
+	public Kitchen findOrFail(Long kitchenId) {
+		return kitchenRepository.findById(kitchenId)
+				.orElseThrow(() -> new EntityNotFoundExeception(
+						String.format(KITCHEN_NOT_FOUND_MESSAGE, kitchenId))
+				);
 	}
 }

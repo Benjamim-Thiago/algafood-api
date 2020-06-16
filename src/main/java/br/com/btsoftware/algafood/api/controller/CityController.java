@@ -2,8 +2,6 @@ package br.com.btsoftware.algafood.api.controller;
 
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
+import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.City;
 import br.com.btsoftware.algafood.domain.repository.CityRepository;
 import br.com.btsoftware.algafood.domain.service.CityService;
@@ -49,7 +48,7 @@ public class CityController {
 	public City save(@RequestBody City city) {
 		try {
 			return cityService.save(city);
-		} catch (EntityNotFoundException e) {
+		} catch (EntityNotExistException e) {
 			throw new BusinessException(e.getMessage());
 		}
 	}
@@ -61,7 +60,7 @@ public class CityController {
 
 		try {
 			return cityService.save(cityInDatabase);
-		} catch (EntityNotFoundException e) {
+		} catch (EntityNotExistException e) {
 			throw new BusinessException(e.getMessage());
 		}
 	}
@@ -72,7 +71,7 @@ public class CityController {
 			cityService.remove(id);
 			return ResponseEntity.noContent().build();
 
-		} catch (EntityNotFoundException e) {
+		} catch (EntityNotExistException e) {
 			return ResponseEntity.notFound().build();
 
 		} catch (EntityInUseException e) {

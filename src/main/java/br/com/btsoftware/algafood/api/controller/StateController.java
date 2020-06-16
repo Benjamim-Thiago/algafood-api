@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
-import br.com.btsoftware.algafood.domain.exception.EntityNotFoundExeception;
+import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.State;
 import br.com.btsoftware.algafood.domain.repository.StateRepository;
 import br.com.btsoftware.algafood.domain.service.StateService;
@@ -62,7 +62,7 @@ public class StateController {
 			stateService.remove(id);
 			return ResponseEntity.noContent().build();
 
-		} catch (EntityNotFoundExeception e) {
+		} catch (EntityNotExistException e) {
 			return ResponseEntity.notFound().build();
 
 		} catch (EntityInUseException e) {

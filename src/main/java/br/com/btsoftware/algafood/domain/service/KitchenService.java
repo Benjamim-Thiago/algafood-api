@@ -6,7 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
-import br.com.btsoftware.algafood.domain.exception.EntityNotFoundExeception;
+import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Kitchen;
 import br.com.btsoftware.algafood.domain.repository.KitchenRepository;
 
@@ -27,7 +27,7 @@ public class KitchenService {
 			kitchenRepository.deleteById(id);
 
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntityNotFoundExeception(
+			throw new EntityNotExistException(
 					String.format(KITCHEN_NOT_FOUND_MESSAGE,  id));
 		
 		} catch (DataIntegrityViolationException e) {
@@ -38,7 +38,7 @@ public class KitchenService {
 	
 	public Kitchen findOrFail(Long kitchenId) {
 		return kitchenRepository.findById(kitchenId)
-				.orElseThrow(() -> new EntityNotFoundExeception(
+				.orElseThrow(() -> new EntityNotExistException(
 						String.format(KITCHEN_NOT_FOUND_MESSAGE, kitchenId))
 				);
 	}

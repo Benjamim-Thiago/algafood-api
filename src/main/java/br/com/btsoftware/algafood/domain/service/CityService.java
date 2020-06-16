@@ -6,7 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
-import br.com.btsoftware.algafood.domain.exception.EntityNotFoundExeception;
+import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.City;
 import br.com.btsoftware.algafood.domain.model.State;
 import br.com.btsoftware.algafood.domain.repository.CityRepository;
@@ -36,7 +36,7 @@ public class CityService {
 			cityRepository.deleteById(id);
 
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntityNotFoundExeception(String.format(CITY_NOT_FOUND_MESSAGE, id));
+			throw new EntityNotExistException(String.format(CITY_NOT_FOUND_MESSAGE, id));
 
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityInUseException(
@@ -46,7 +46,7 @@ public class CityService {
 	
 	public City findOrFail(Long id) {
 		return cityRepository.findById(id).orElseThrow(
-					() -> new EntityNotFoundExeception(
+					() -> new EntityNotExistException(
 							String.format(CITY_NOT_FOUND_MESSAGE, id)
 						)
 				);

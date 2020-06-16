@@ -3,7 +3,7 @@ package br.com.btsoftware.algafood.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.btsoftware.algafood.domain.exception.EntityNotFoundExeception;
+import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Kitchen;
 import br.com.btsoftware.algafood.domain.model.Restaurant;
 import br.com.btsoftware.algafood.domain.repository.RestaurantRepository;
@@ -30,7 +30,7 @@ public class RestaurantService {
 	public Restaurant findOrFail(Long restaurantId) {
 		
 		return restaurantRepository.findById(restaurantId).orElseThrow(
-				() -> new EntityNotFoundExeception(
+				() -> new EntityNotExistException(
 						String.format(RESTAURANT_NOT_FOUND_MESSAGE,  restaurantId)
 						)
 				);

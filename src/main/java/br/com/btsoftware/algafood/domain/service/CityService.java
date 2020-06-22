@@ -5,8 +5,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import br.com.btsoftware.algafood.domain.exception.CityEntityNotExistException;
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
-import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.City;
 import br.com.btsoftware.algafood.domain.model.State;
 import br.com.btsoftware.algafood.domain.repository.CityRepository;
@@ -14,9 +14,6 @@ import br.com.btsoftware.algafood.domain.repository.CityRepository;
 @Service
 public class CityService {
 	private static final String CITY_IN_USE_MESSAGE = "Cidade com código %d não pode ser removida, pois está em uso";
-
-	private static final String CITY_NOT_FOUND_MESSAGE = "Não existe um cadastro da Cidade com código %d";
-
 	@Autowired
 	private StateService stateService;
 	
@@ -36,7 +33,7 @@ public class CityService {
 			cityRepository.deleteById(id);
 
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntityNotExistException(String.format(CITY_NOT_FOUND_MESSAGE, id));
+			throw new CityEntityNotExistException(id);
 
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityInUseException(
@@ -46,9 +43,6 @@ public class CityService {
 	
 	public City findOrFail(Long id) {
 		return cityRepository.findById(id).orElseThrow(
-					() -> new EntityNotExistException(
-							String.format(CITY_NOT_FOUND_MESSAGE, id)
-						)
-				);
+					() -> new CityEntityNotExistException(id));
 	}
 }

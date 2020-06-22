@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
 import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
+import br.com.btsoftware.algafood.domain.exception.StateEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.City;
 import br.com.btsoftware.algafood.domain.repository.CityRepository;
 import br.com.btsoftware.algafood.domain.service.CityService;
@@ -48,8 +49,8 @@ public class CityController {
 	public City save(@RequestBody City city) {
 		try {
 			return cityService.save(city);
-		} catch (EntityNotExistException e) {
-			throw new BusinessException(e.getMessage());
+		} catch (StateEntityNotExistException e) {
+			throw new BusinessException(e.getMessage(), e);
 		}
 	}
 
@@ -60,8 +61,8 @@ public class CityController {
 
 		try {
 			return cityService.save(cityInDatabase);
-		} catch (EntityNotExistException e) {
-			throw new BusinessException(e.getMessage());
+		} catch (StateEntityNotExistException e) {
+			throw new BusinessException(e.getMessage(), e);
 		}
 	}
 

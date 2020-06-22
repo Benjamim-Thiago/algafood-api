@@ -6,7 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
-import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
+import br.com.btsoftware.algafood.domain.exception.StateEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.State;
 import br.com.btsoftware.algafood.domain.repository.StateRepository;
 
@@ -14,7 +14,7 @@ import br.com.btsoftware.algafood.domain.repository.StateRepository;
 public class StateService {
 
 	private static final String STATE_IN_USE_MESSAGE = "Estado com código %d não pode ser removida, pois está em uso";
-	private static final String STATE_NOT_FOUND_MESSAGE = "Não existe um cadastro de Estado com código %d";
+	
 	@Autowired
 	private StateRepository stateRepository;
 	
@@ -28,8 +28,7 @@ public class StateService {
 			stateRepository.deleteById(id);
 
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntityNotExistException(
-					String.format(STATE_NOT_FOUND_MESSAGE,  id));
+			throw new StateEntityNotExistException(id);
 		
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityInUseException(
@@ -39,10 +38,7 @@ public class StateService {
 	
 	public State findOrFail(Long id) {
 		return stateRepository.findById(id).orElseThrow(
-				() -> new EntityNotExistException(
-							String.format(STATE_NOT_FOUND_MESSAGE,  id)
-						)
-				);
+				() -> new StateEntityNotExistException(id));
 	}
 
 }

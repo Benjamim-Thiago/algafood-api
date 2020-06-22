@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.btsoftware.algafood.domain.exception.BusinessException;
+import br.com.btsoftware.algafood.domain.exception.KitchenEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Restaurant;
 import br.com.btsoftware.algafood.domain.repository.RestaurantRepository;
 import br.com.btsoftware.algafood.domain.service.RestaurantService;
@@ -52,18 +54,26 @@ public class RestaurantController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Restaurant save(@RequestBody Restaurant restaurant) {
-		return restaurantService.save(restaurant);
+		try {			
+			return restaurantService.save(restaurant);
+		} catch (KitchenEntityNotExistException e) {
+			throw new BusinessException(e.getMessage(), e);
+		}
+		
 	}
 
 	@PutMapping("/{id}")
 	public Restaurant update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
-
-		Restaurant restaurantInDatabase = restaurantService.findOrFail(id);
-		restaurant.setUpdated(LocalDate.now());
-		BeanUtils.copyProperties(restaurant, restaurantInDatabase, "id", "paymentsMode", "address", "products",
-				"created");
-
-		return restaurantService.save(restaurantInDatabase);
+		try {
+			Restaurant restaurantInDatabase = restaurantService.findOrFail(id);
+			restaurant.setUpdated(LocalDate.now());
+			BeanUtils.copyProperties(restaurant, restaurantInDatabase, "id", "paymentsMode", "address", "products",
+					"created");
+			
+			return restaurantService.save(restaurantInDatabase);			
+		} catch (KitchenEntityNotExistException e) {
+			throw new BusinessException(e.getMessage(), e);
+		}
 
 	}
 

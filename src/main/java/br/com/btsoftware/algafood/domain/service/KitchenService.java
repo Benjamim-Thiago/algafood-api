@@ -6,7 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
-import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
+import br.com.btsoftware.algafood.domain.exception.KitchenEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Kitchen;
 import br.com.btsoftware.algafood.domain.repository.KitchenRepository;
 
@@ -14,7 +14,7 @@ import br.com.btsoftware.algafood.domain.repository.KitchenRepository;
 public class KitchenService {
 
 	private static final String KITCHEN_IN_USE_MESSAGE = "Cozinha de código %d não pode ser removida, pois está em uso";
-	private static final String KITCHEN_NOT_FOUND_MESSAGE = "Não existe um cadastro de cozinha com código %d";
+	
 	@Autowired
 	private KitchenRepository kitchenRepository;
 
@@ -27,8 +27,7 @@ public class KitchenService {
 			kitchenRepository.deleteById(id);
 
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntityNotExistException(
-					String.format(KITCHEN_NOT_FOUND_MESSAGE,  id));
+			throw new KitchenEntityNotExistException(id);
 		
 		} catch (DataIntegrityViolationException e) {
 			throw new EntityInUseException(
@@ -38,8 +37,6 @@ public class KitchenService {
 	
 	public Kitchen findOrFail(Long kitchenId) {
 		return kitchenRepository.findById(kitchenId)
-				.orElseThrow(() -> new EntityNotExistException(
-						String.format(KITCHEN_NOT_FOUND_MESSAGE, kitchenId))
-				);
+				.orElseThrow(() -> new KitchenEntityNotExistException(kitchenId));
 	}
 }

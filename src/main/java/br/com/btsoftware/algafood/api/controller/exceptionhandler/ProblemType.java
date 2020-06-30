@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ProblemType {
+	INVALID_DATA("/invalid-data", "Dados inválidos"),
 	SYSTEM_ERROR("/system-error", "Erro de sistema"),
 	INVALID_PARAM("/invalid-param-url", "Parametro do tipo inválido"),
 	INCOMPATIBLE_BODY("/incompatible-body", "Corpo da mensagem JSON com erro"),

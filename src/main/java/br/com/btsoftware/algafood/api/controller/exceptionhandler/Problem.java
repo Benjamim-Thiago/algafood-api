@@ -1,6 +1,7 @@
 package br.com.btsoftware.algafood.api.controller.exceptionhandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -18,7 +19,17 @@ public class Problem {
 	private String title;
 	private String detail;
 	
-	private String userDetail;
+	private String userMessage;
+	
+	private List<Field> fileds;
+	
+	
+	@Getter
+	@Builder
+	public static class Field {
+		private String name;
+		private String userMessage;
+	}
 	
 	
 }

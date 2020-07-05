@@ -2,6 +2,8 @@ package br.com.btsoftware.algafood.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,14 +44,14 @@ public class KitchenController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Kitchen> save(@RequestBody Kitchen kitchen) {
+	public ResponseEntity<Kitchen> save(@RequestBody @Valid Kitchen kitchen) {
 		Kitchen kitchenSaved = kitchenService.save(kitchen);
 
 		return ResponseEntity.ok(kitchenSaved);
 	}
 
 	@PutMapping("/{id}")
-	public Kitchen update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
+	public Kitchen update(@PathVariable Long id, @RequestBody @Valid Kitchen kitchen) {
 		Kitchen kitchenInDataBase = kitchenService.findOrFail(id);
 		BeanUtils.copyProperties(kitchen, kitchenInDataBase, "id");
 		return kitchenService.save(kitchenInDataBase);

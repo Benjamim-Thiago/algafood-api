@@ -48,7 +48,7 @@ public class RestaurantController {
 	@GetMapping
 	public ResponseEntity<List<Restaurant>> list() {
 		List<Restaurant> restaurants = restaurantRepository.findAll();
-		// System.out.println("Acozinha do primeiro restaurante é:");
+		// System.out.println("A cozinha do primeiro restaurante é:");
 		// System.out.println(restaurants.get(0).getKitchen().getName());
 		return ResponseEntity.ok(restaurants);
 	}
@@ -70,7 +70,7 @@ public class RestaurantController {
 	}
 
 	@PutMapping("/{id}")
-	public Restaurant update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
+	public Restaurant update(@PathVariable Long id, @RequestBody @Valid Restaurant restaurant) {
 		try {
 			Restaurant restaurantInDatabase = restaurantService.findOrFail(id);
 			restaurant.setUpdated(LocalDate.now());

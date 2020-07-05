@@ -17,13 +17,19 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.btsoftware.algafood.api.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -41,14 +47,18 @@ public class Restaurant {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
+	@NotBlank
 	private String name;
 
+	@PositiveOrZero
 	@Column(name = "delivery_fee")
 	private BigDecimal deliveryFee;
 
 	//@JsonIgnoreProperties("hibernateLazyInitializer")
 	//@JsonIgnore
+	@Valid
+	@ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
+	@NotNull
 	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "kitchen_id", nullable = false)
 	private Kitchen kitchen;

@@ -51,36 +51,34 @@ public class Restaurant {
 	private String name;
 
 	@PositiveOrZero
-	@Column(name = "delivery_fee")
+	@Column(name = "delivery_fee", nullable = false)
 	private BigDecimal deliveryFee;
 
-	//@JsonIgnoreProperties("hibernateLazyInitializer")
-	//@JsonIgnore
+	// @JsonIgnoreProperties("hibernateLazyInitializer")
+	// @JsonIgnore
 	@Valid
 	@ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
 	@NotNull
-	@ManyToOne //(fetch = FetchType.LAZY)
+	@ManyToOne // (fetch = FetchType.LAZY)
 	@JoinColumn(name = "kitchen_id", nullable = false)
 	private Kitchen kitchen;
 
 	@JsonIgnore
 	@Embedded
 	private Address address;
-	
+
 	@JsonIgnore
 	@ManyToMany()
-	@JoinTable(name = "restaurant_payment_mode", 
-			   joinColumns = @JoinColumn(name = "restaurant_id"), 
-			   inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
+	@JoinTable(name = "restaurant_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
 	private List<PaymentMode> paymentsMode = new ArrayList<>();
-		
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "restaurant")
 	private List<Product> products = new ArrayList<>();
-	
+
 	@CreationTimestamp
 	private LocalDate created;
-	
+
 	@UpdateTimestamp()
 	private LocalDate updated;
 }

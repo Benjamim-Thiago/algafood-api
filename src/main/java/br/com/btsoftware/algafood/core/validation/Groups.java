@@ -1,4 +1,4 @@
-package br.com.btsoftware.algafood.api;
+package br.com.btsoftware.algafood.core.validation;
 
 public interface Groups {
 	public interface KitchenId {

@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
@@ -28,8 +29,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.btsoftware.algafood.core.validation.DeliveryFee;
 import br.com.btsoftware.algafood.core.validation.Groups;
+import br.com.btsoftware.algafood.core.validation.Multiple;
+import br.com.btsoftware.algafood.core.validation.ValueZeroIncludeDescription;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -40,6 +42,9 @@ import lombok.EqualsAndHashCode;
 @Table(name = "restaurants")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
+@ValueZeroIncludeDescription(valueField = "deliveryFee", 
+	descriptionField = "name", descriptionRequired = "Frete Grátis")
 public class Restaurant {
 
 	@EqualsAndHashCode.Include
@@ -50,9 +55,10 @@ public class Restaurant {
 	@NotBlank
 	private String name;
 
-	//@PositiveOrZero
 	@NotNull
-	@DeliveryFee
+	@PositiveOrZero
+	//@DeliveryFee
+	@Multiple(number = 5)
 	@Column(name = "delivery_fee", nullable = false)
 	private BigDecimal deliveryFee;
 

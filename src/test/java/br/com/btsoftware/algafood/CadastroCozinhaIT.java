@@ -15,7 +15,7 @@ import br.com.btsoftware.algafood.domain.model.Kitchen;
 import br.com.btsoftware.algafood.domain.service.KitchenService;
 
 @SpringBootTest
-class CadastroCozinhaIntegrationTests {
+class CadastroCozinhaIT {
 
 	@Autowired
 	private KitchenService kitchenService;

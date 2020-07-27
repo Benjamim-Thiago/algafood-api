@@ -2,6 +2,7 @@ package br.com.btsoftware.algafood.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.btsoftware.algafood.domain.exception.RestaurantEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Kitchen;
@@ -17,6 +18,7 @@ public class RestaurantService {
 	@Autowired
 	private KitchenService kitchenService;
 	
+	@Transactional
 	public Restaurant save(Restaurant restaurant) {
 		Long kitchenId = restaurant.getKitchen().getId();
 		Kitchen kitchen =  kitchenService.findOrFail(kitchenId);

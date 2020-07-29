@@ -28,6 +28,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.btsoftware.algafood.core.validation.Groups;
 import br.com.btsoftware.algafood.core.validation.Multiple;
@@ -64,6 +65,7 @@ public class Restaurant {
 
 	// @JsonIgnoreProperties("hibernateLazyInitializer")
 	// @JsonIgnore
+	@JsonIgnoreProperties(value = "name", allowGetters = true)
 	@Valid
 	@ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
 	@NotNull

@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 import br.com.btsoftware.algafood.core.validation.Groups;
@@ -39,7 +38,6 @@ public class Kitchen {
 	@NotBlank
 	private String name;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "kitchen")
 	private List<Restaurant> restaurants = new ArrayList<>(); 
 

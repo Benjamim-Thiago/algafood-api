@@ -27,9 +27,6 @@ import javax.validation.groups.Default;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import br.com.btsoftware.algafood.core.validation.Groups;
 import br.com.btsoftware.algafood.core.validation.Multiple;
 import br.com.btsoftware.algafood.core.validation.ValueZeroIncludeDescription;
@@ -63,9 +60,8 @@ public class Restaurant {
 	@Column(name = "delivery_fee", nullable = false)
 	private BigDecimal deliveryFee;
 
-	// @JsonIgnoreProperties("hibernateLazyInitializer")
-	// @JsonIgnore
-	@JsonIgnoreProperties(value = "name", allowGetters = true)
+	// Properties("hibernateLazyInitializer")
+	// 
 	@Valid
 	@ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
 	@NotNull
@@ -73,16 +69,14 @@ public class Restaurant {
 	@JoinColumn(name = "kitchen_id", nullable = false)
 	private Kitchen kitchen;
 
-	@JsonIgnore
+	
 	@Embedded
 	private Address address;
-
-	@JsonIgnore
+	
 	@ManyToMany()
 	@JoinTable(name = "restaurant_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
 	private List<PaymentMode> paymentsMode = new ArrayList<>();
-
-	@JsonIgnore
+	
 	@OneToMany(mappedBy = "restaurant")
 	private List<Product> products = new ArrayList<>();
 

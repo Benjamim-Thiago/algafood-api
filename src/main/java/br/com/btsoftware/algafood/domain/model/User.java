@@ -1,6 +1,6 @@
 package br.com.btsoftware.algafood.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,5 +42,5 @@ public class User {
 
 	
 	 @CreationTimestamp
-	 private LocalDateTime created;
+	 private OffsetDateTime created;
 }

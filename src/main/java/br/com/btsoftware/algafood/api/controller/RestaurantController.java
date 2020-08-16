@@ -1,7 +1,7 @@
 package br.com.btsoftware.algafood.api.controller;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +79,7 @@ public class RestaurantController {
 	public Restaurant update(@PathVariable Long id, @RequestBody @Valid Restaurant restaurant) {
 		try {
 			Restaurant restaurantInDatabase = restaurantService.findOrFail(id);
-			restaurant.setUpdated(LocalDate.now());
+			restaurant.setUpdated(OffsetDateTime.now());
 			BeanUtils.copyProperties(restaurant, restaurantInDatabase, "id", "paymentsMode", "address", "products",
 					"created");
 			

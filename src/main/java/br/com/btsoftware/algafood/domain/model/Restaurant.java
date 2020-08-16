@@ -1,7 +1,7 @@
 package br.com.btsoftware.algafood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +41,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
-@ValueZeroIncludeDescription(valueField = "deliveryFee", 
-	descriptionField = "name", descriptionRequired = "Frete Grátis")
+@ValueZeroIncludeDescription(valueField = "deliveryFee", descriptionField = "name", descriptionRequired = "Frete Grátis")
 public class Restaurant {
 
 	@EqualsAndHashCode.Include
@@ -55,13 +54,13 @@ public class Restaurant {
 
 	@NotNull
 	@PositiveOrZero
-	//@DeliveryFee
+	// @DeliveryFee
 	@Multiple(number = 5)
 	@Column(name = "delivery_fee", nullable = false)
 	private BigDecimal deliveryFee;
 
 	// Properties("hibernateLazyInitializer")
-	// 
+	//
 	@Valid
 	@ConvertGroup(from = Default.class, to = Groups.KitchenId.class)
 	@NotNull
@@ -69,20 +68,19 @@ public class Restaurant {
 	@JoinColumn(name = "kitchen_id", nullable = false)
 	private Kitchen kitchen;
 
-	
 	@Embedded
 	private Address address;
-	
+
 	@ManyToMany()
 	@JoinTable(name = "restaurant_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
 	private List<PaymentMode> paymentsMode = new ArrayList<>();
-	
+
 	@OneToMany(mappedBy = "restaurant")
 	private List<Product> products = new ArrayList<>();
 
 	@CreationTimestamp
-	private LocalDate created;
+	private OffsetDateTime created;
 
 	@UpdateTimestamp()
-	private LocalDate updated;
+	private OffsetDateTime updated;
 }

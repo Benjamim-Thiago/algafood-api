@@ -1,7 +1,7 @@
 package br.com.btsoftware.algafood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,16 +65,16 @@ public class Request {
 	private BigDecimal valueTotal;
 	
 	@CreationTimestamp
-	private LocalDate created;
+	private OffsetDateTime created;
 
 	@Column(name = "confirmation_date")
-	private LocalDate confirmationDate;
+	private OffsetDateTime confirmationDate;
 	
-	@Column(name = "cancellation_date")
-	private LocalDate cancellationDate;
+	@Column(name = "cancellatioLocalDaten_date")
+	private OffsetDateTime cancellationDate;
 	
 	@Column(name = "delivery_date")
-	private LocalDate deliveryDate;
+	private OffsetDateTime deliveryDate;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")

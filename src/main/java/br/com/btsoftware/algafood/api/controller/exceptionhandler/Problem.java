@@ -1,6 +1,6 @@
 package br.com.btsoftware.algafood.api.controller.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,7 +13,7 @@ import lombok.Getter;
 @Builder
 @JsonInclude(value = Include.NON_NULL)
 public class Problem {
-	private LocalDateTime timestamp;
+	private OffsetDateTime timestamp;
 	private Integer status;
 	private String type;
 	private String title;

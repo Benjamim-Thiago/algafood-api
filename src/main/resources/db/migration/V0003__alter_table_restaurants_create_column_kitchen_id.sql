@@ -9,3 +9,4 @@ ALTER TABLE restaurants
 
 INSERT INTO restaurants(name, delivery_fee, kitchen_id) VALUES ('THE BRAZIL', 7.50, 1);
 INSERT INTO restaurants(name, delivery_fee, kitchen_id) VALUES ('MD THAY', 10, 2);
+INSERT INTO restaurants(name, delivery_fee, kitchen_id) VALUES ('COZINHA BRASILEIRA', 5, 1);

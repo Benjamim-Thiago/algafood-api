@@ -26,9 +26,9 @@ public abstract class RestaurantMixin {
 	@JsonIgnore
 	private List<Product> products = new ArrayList<>();
 
-	@JsonIgnore
+	//@JsonIgnore
 	private LocalDate created;
 
-	@JsonIgnore
+	//@JsonIgnore
 	private LocalDate updated;
 }

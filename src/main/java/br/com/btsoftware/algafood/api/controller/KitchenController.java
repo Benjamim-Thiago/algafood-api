@@ -4,10 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.btsoftware.algafood.api.assembler.KitchenModelAssembler;
+import br.com.btsoftware.algafood.api.assembler.input.KitchenInputDisassembler;
+import br.com.btsoftware.algafood.api.model.KitchenModel;
+import br.com.btsoftware.algafood.api.model.input.KitchenInput;
+import br.com.btsoftware.algafood.domain.exception.BusinessException;
+import br.com.btsoftware.algafood.domain.exception.KitchenEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Kitchen;
 import br.com.btsoftware.algafood.domain.repository.KitchenRepository;
 import br.com.btsoftware.algafood.domain.service.KitchenService;
@@ -32,29 +36,46 @@ public class KitchenController {
 	@Autowired
 	private KitchenService kitchenService;
 
+	@Autowired
+	private KitchenModelAssembler kitchenModelAssembler;
+
+	@Autowired
+	private KitchenInputDisassembler kitchenInputDisassembler;
+
 	@GetMapping()
-	public List<Kitchen> list() {
-		return kitchenRepository.findAll();
+	public List<KitchenModel> list() {
+		return kitchenModelAssembler.toCollectionModel(kitchenRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
-	public Kitchen find(@PathVariable Long id) {
-		return kitchenService.findOrFail(id);
+	public KitchenModel find(@PathVariable Long id) {
+		return kitchenModelAssembler.toModel(kitchenService.findOrFail(id));
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Kitchen> save(@RequestBody @Valid Kitchen kitchen) {
-		Kitchen kitchenSaved = kitchenService.save(kitchen);
+	public KitchenModel save(@RequestBody @Valid KitchenInput kitchenInput) {
+		try {
 
-		return ResponseEntity.ok(kitchenSaved);
+			Kitchen kitchen = kitchenInputDisassembler.toDomainObject(kitchenInput);
+
+			return kitchenModelAssembler.toModel(kitchenService.save(kitchen));
+		} catch (KitchenEntityNotExistException e) {
+			throw new BusinessException(e.getMessage());
+		}
 	}
 
 	@PutMapping("/{id}")
-	public Kitchen update(@PathVariable Long id, @RequestBody @Valid Kitchen kitchen) {
-		Kitchen kitchenInDataBase = kitchenService.findOrFail(id);
-		BeanUtils.copyProperties(kitchen, kitchenInDataBase, "id");
-		return kitchenService.save(kitchenInDataBase);
+	public KitchenModel update(@PathVariable Long id, @RequestBody @Valid KitchenInput kitchenInput) {
+		try {
+			Kitchen kitchenInDataBase = kitchenService.findOrFail(id);
+
+			kitchenInputDisassembler.copyToDomainObject(kitchenInput, kitchenInDataBase);
+
+			return kitchenModelAssembler.toModel(kitchenService.save(kitchenInDataBase));
+		} catch (KitchenEntityNotExistException e) {
+			throw new BusinessException(e.getMessage(), e);
+		}
 
 	}
 

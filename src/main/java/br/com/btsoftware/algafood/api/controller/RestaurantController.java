@@ -1,17 +1,12 @@
 package br.com.btsoftware.algafood.api.controller;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,11 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.btsoftware.algafood.api.assembler.RestaurantInputDisassembler;
 import br.com.btsoftware.algafood.api.assembler.RestaurantModelAssembler;
+import br.com.btsoftware.algafood.api.assembler.input.RestaurantInputDisassembler;
 import br.com.btsoftware.algafood.api.model.RestaurantModel;
 import br.com.btsoftware.algafood.api.model.input.RestaurantInput;
-import br.com.btsoftware.algafood.core.validation.ValidationException;
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.exception.KitchenEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Restaurant;
@@ -47,9 +41,6 @@ public class RestaurantController {
 	@Autowired
 	private RestaurantInputDisassembler restaurantInputDisassembler;
 	
-	@Autowired
-	private SmartValidator validator;	
-
 	@GetMapping
 	public List<RestaurantModel> list() {
 		return restaurantAssembler.toCollectionModel(restaurantRepository.findAll());
@@ -78,15 +69,10 @@ public class RestaurantController {
 	@PutMapping("/{id}")
 	public RestaurantModel update(@PathVariable Long id, @RequestBody @Valid RestaurantInput restaurantInput) {
 		try {
-			Restaurant restaurant =  restaurantInputDisassembler.toDomainObject(restaurantInput);
-			
 			Restaurant restaurantInDatabase = restaurantService.findOrFail(id);
 			
-			restaurant.setUpdated(OffsetDateTime.now());
-
-			BeanUtils.copyProperties(restaurant, restaurantInDatabase, "id", "paymentsMode", "address", "products",
-					"created");
-			
+			restaurantInputDisassembler.copyToDomainObject(restaurantInput, restaurantInDatabase);
+						
 			return restaurantAssembler.toModel(restaurantService.save(restaurantInDatabase));			
 		} catch (KitchenEntityNotExistException e) {
 			throw new BusinessException(e.getMessage(), e);
@@ -94,7 +80,7 @@ public class RestaurantController {
 
 	}
 
-	@PatchMapping("/{id}")
+//	@PatchMapping("/{id}")
 //	public Restaurant partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> filds, HttpServletRequest request) {
 //
 //		Restaurant restaurantInDatabase = restaurantService.findOrFail(id);
@@ -134,14 +120,5 @@ public class RestaurantController {
 //			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpRequest);
 //		}
 //	}
-	
-	private void validate(Restaurant restaurant, String objectName) {
-		BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurant, objectName);
-		validator.validate(restaurant, bindingResult);
-		
-		if (bindingResult.hasErrors()) {
-			throw new ValidationException(bindingResult);
-		}
-	}	
 	
 }

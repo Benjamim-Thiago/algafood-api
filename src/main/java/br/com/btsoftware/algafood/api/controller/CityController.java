@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.btsoftware.algafood.api.assembler.CityModelAssembler;
+import br.com.btsoftware.algafood.api.assembler.input.CityInputDisassembler;
+import br.com.btsoftware.algafood.api.model.CityModel;
+import br.com.btsoftware.algafood.api.model.input.CityInput;
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.exception.EntityInUseException;
 import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
@@ -36,33 +39,45 @@ public class CityController {
 	@Autowired
 	private CityService cityService;
 
+	@Autowired
+	private CityModelAssembler cityModelAssembler;
+	
+	@Autowired	
+	private CityInputDisassembler cityInputDisassembler;
+	
 	@GetMapping
-	public ResponseEntity<List<City>> list() {
-		return ResponseEntity.ok(cityRepository.findAll());
+	public List<CityModel> list() {
+		return cityModelAssembler.toCollectionModel(cityRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
-	public City find(@PathVariable Long id) {
-		return cityService.findOrFail(id);
+	public CityModel find(@PathVariable Long id) {
+		return cityModelAssembler.toModel(cityService.findOrFail(id));
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public City save(@RequestBody @Valid City city) {
+	public CityModel save(@RequestBody @Valid CityInput cityInput) {
 		try {
-			return cityService.save(city);
+			
+			City city = cityInputDisassembler.toDomainObject(cityInput);
+		
+			return cityModelAssembler.toModel(cityService.save(city));
+		
 		} catch (StateEntityNotExistException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
 
 	@PutMapping("/{id}")
-	public City update(@PathVariable Long id, @RequestBody @Valid City city) {
-		City cityInDatabase = cityService.findOrFail(id);
-		BeanUtils.copyProperties(city, cityInDatabase, "id");
-
+	public CityModel update(@PathVariable Long id, @RequestBody @Valid CityInput cityInput) {
 		try {
-			return cityService.save(cityInDatabase);
+		City cityInDatabase = cityService.findOrFail(id);
+		
+		cityInputDisassembler.copyToDomainObject(cityInput, cityInDatabase);
+		
+			return cityModelAssembler.toModel(cityService.save(cityInDatabase));
+			
 		} catch (StateEntityNotExistException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}

@@ -41,10 +41,10 @@ public class CityController {
 
 	@Autowired
 	private CityModelAssembler cityModelAssembler;
-	
-	@Autowired	
+
+	@Autowired
 	private CityInputDisassembler cityInputDisassembler;
-	
+
 	@GetMapping
 	public List<CityModel> list() {
 		return cityModelAssembler.toCollectionModel(cityRepository.findAll());
@@ -59,11 +59,11 @@ public class CityController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public CityModel save(@RequestBody @Valid CityInput cityInput) {
 		try {
-			
+
 			City city = cityInputDisassembler.toDomainObject(cityInput);
-		
+
 			return cityModelAssembler.toModel(cityService.save(city));
-		
+
 		} catch (StateEntityNotExistException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}
@@ -72,12 +72,12 @@ public class CityController {
 	@PutMapping("/{id}")
 	public CityModel update(@PathVariable Long id, @RequestBody @Valid CityInput cityInput) {
 		try {
-		City cityInDatabase = cityService.findOrFail(id);
-		
-		cityInputDisassembler.copyToDomainObject(cityInput, cityInDatabase);
-		
+			City cityInDatabase = cityService.findOrFail(id);
+
+			cityInputDisassembler.copyToDomainObject(cityInput, cityInDatabase);
+
 			return cityModelAssembler.toModel(cityService.save(cityInDatabase));
-			
+
 		} catch (StateEntityNotExistException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}

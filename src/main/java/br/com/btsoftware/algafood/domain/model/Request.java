@@ -47,7 +47,7 @@ public class Request {
 	@ManyToOne
 	@JoinColumn(name = "client_id", nullable = false)
 	private User client;
-	
+		
 	@Embedded
     private Address deliveryAddress;
 	

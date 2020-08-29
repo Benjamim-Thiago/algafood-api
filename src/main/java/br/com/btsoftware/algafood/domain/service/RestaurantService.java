@@ -28,6 +28,20 @@ public class RestaurantService {
 		return restaurantRepository.save(restaurant);
 	}
 	
+	@Transactional
+	public void activate(Long id) {
+		Restaurant restaurant = findOrFail(id);
+		
+		restaurant.activate();
+	}
+	
+	@Transactional
+	public void inactivate(Long id) {
+		Restaurant restaurant = findOrFail(id);
+		
+		restaurant.inactivate();
+	}
+	
 	public Restaurant findOrFail(Long restaurantId) {
 		
 		return restaurantRepository.findById(restaurantId).orElseThrow(

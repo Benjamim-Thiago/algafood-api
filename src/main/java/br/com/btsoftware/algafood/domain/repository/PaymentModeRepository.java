@@ -1,12 +1,9 @@
 package br.com.btsoftware.algafood.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.btsoftware.algafood.domain.model.PaymentMode;
 
-public interface PaymentModeRepository {
-	List<PaymentMode> list();
-	PaymentMode find(Long id);
-	PaymentMode save(PaymentMode paymentMode);
-	void delete(PaymentMode paymentMode);
+public interface PaymentModeRepository  extends JpaRepository<PaymentMode, Long> {
+	
 }

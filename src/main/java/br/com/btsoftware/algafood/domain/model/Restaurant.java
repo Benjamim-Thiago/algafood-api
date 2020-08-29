@@ -58,6 +58,8 @@ public class Restaurant {
 
 	@Embedded
 	private Address address;
+	
+	private Boolean active = Boolean.TRUE; 
 
 	@ManyToMany()
 	@JoinTable(name = "restaurant_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
@@ -71,4 +73,12 @@ public class Restaurant {
 
 	@UpdateTimestamp()
 	private OffsetDateTime updated;
+	
+	public void activate() {
+		setActive(true);
+	}
+	
+	public void inactivate() {
+		setActive(false);
+	}
 }

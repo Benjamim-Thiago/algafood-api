@@ -5,7 +5,8 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class PaymentModeModel {
+public class CityResumeModel {
 	private Long id;
-	private String description;
+	private String name;
+	private String state;
 }

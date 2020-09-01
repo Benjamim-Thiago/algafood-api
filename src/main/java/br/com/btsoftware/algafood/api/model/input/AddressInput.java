@@ -7,14 +7,25 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class CityInput {
+@Setter
+public class AddressInput {
+	
 	@NotBlank
-	private String name;
-		
+	private String zipcode;
+
+	@NotBlank
+	private String publicArea;
+
+	@NotBlank
+	private String number;
+
+	private String complement;
+
+	@NotBlank
+	private String neighborhood;
+
 	@Valid
 	@NotNull
-	private StateIdInput state;
-	
+	private CityIdInput city;
 }

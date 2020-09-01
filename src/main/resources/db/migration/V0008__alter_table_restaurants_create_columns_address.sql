@@ -9,3 +9,11 @@ ALTER TABLE restaurants
 	ADD CONSTRAINT fk_city
 	FOREIGN KEY (address_city_id) 
 	REFERENCES cities(id);
+	
+UPDATE restaurants SET 
+  address_zipcode='64011740'
+, address_public_area='RUA NÃO SEI'
+, address_number='41456'
+, address_neighborhood='MEU CANTO'
+, address_city_id=1
+WHERE id=1;

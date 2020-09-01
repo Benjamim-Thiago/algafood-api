@@ -54,10 +54,10 @@ public class PaymentModeController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public PaymentModeModel save(@RequestBody @Valid PaymentModeInput paymentModeInput) {
+	public PaymentModeModel save(@RequestBody @Valid PaymentInput paymentInput) {
 		try {
 
-			PaymentMode paymentMode = paymentModeInputDisassembler.toDomainObject(paymentModeInput);
+			PaymentMode paymentMode = paymentModeInputDisassembler.toDomainObject(paymentInput);
 
 			return paymentModeModelAssembler.toModel(paymentModeService.save(paymentMode));
 		} catch (PaymentModeEntityNotExistException e) {
@@ -66,11 +66,11 @@ public class PaymentModeController {
 	}
 
 	@PutMapping("/{id}")
-	public PaymentModeModel update(@PathVariable Long id, @RequestBody @Valid PaymentInput paymentModeInput) {
+	public PaymentModeModel update(@PathVariable Long id, @RequestBody @Valid PaymentInput paymentInput) {
 		try {
 			PaymentMode paymentModeInDataBase = paymentModeService.findOrFail(id);
 
-			paymentModeInputDisassembler.copyToDomainObject(paymentModeInput, paymentModeInDataBase);
+			paymentModeInputDisassembler.copyToDomainObject(paymentInput, paymentModeInDataBase);
 
 			return paymentModeModelAssembler.toModel(paymentModeService.save(paymentModeInDataBase));
 		} catch (PaymentModeEntityNotExistException e) {
@@ -97,7 +97,7 @@ public class PaymentModeController {
 	 */
 
 	@DeleteMapping("/{id}")
-	@ResponseStatus(value = HttpStatus.NOT_FOUND)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void remove(@PathVariable Long id) {
 		paymentModeService.remove(id);
 	}

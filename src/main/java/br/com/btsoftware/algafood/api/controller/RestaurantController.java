@@ -21,6 +21,7 @@ import br.com.btsoftware.algafood.api.assembler.input.RestaurantInputDisassemble
 import br.com.btsoftware.algafood.api.model.RestaurantModel;
 import br.com.btsoftware.algafood.api.model.input.RestaurantInput;
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
+import br.com.btsoftware.algafood.domain.exception.CityEntityNotExistException;
 import br.com.btsoftware.algafood.domain.exception.KitchenEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Restaurant;
 import br.com.btsoftware.algafood.domain.repository.RestaurantRepository;
@@ -61,7 +62,7 @@ public class RestaurantController {
 			Restaurant restaurant =  restaurantInputDisassembler.toDomainObject(restaurantInput);
 			
 			return restaurantAssembler.toModel(restaurantService.save(restaurant));
-		} catch (KitchenEntityNotExistException e) {
+		} catch (KitchenEntityNotExistException | CityEntityNotExistException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}
 		
@@ -75,7 +76,7 @@ public class RestaurantController {
 			restaurantInputDisassembler.copyToDomainObject(restaurantInput, restaurantInDatabase);
 						
 			return restaurantAssembler.toModel(restaurantService.save(restaurantInDatabase));			
-		} catch (KitchenEntityNotExistException e) {
+		} catch (KitchenEntityNotExistException | CityEntityNotExistException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}
 

@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
 	@EqualsAndHashCode.Include
@@ -43,4 +43,12 @@ public class User {
 	
 	 @CreationTimestamp
 	 private OffsetDateTime created;
+	 
+	 public boolean passwordWithEquals(String password) {
+		    return getPassword().equals(password);
+		}
+
+		public boolean passwordNotWithEquals(String password) {
+		    return !passwordWithEquals(password);
+		}
 }

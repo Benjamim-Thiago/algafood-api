@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class UserAlterPassswordInput {
 	@NotBlank
-	private String nowPassword;
+	private String currentPassword;
 	
 	@NotBlank
 	private String newPassword;

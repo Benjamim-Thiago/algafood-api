@@ -41,14 +41,14 @@ public class UserController {
     private UserInputDisassembler userInputDisassembler;
     
     @GetMapping
-    public List<UserModel> listar() {
+    public List<UserModel> list() {
         List<User> todasUsers = userRepository.findAll();
         
         return userModelAssembler.toCollectionModel(todasUsers);
     }
     
     @GetMapping("/{userId}")
-    public UserModel buscar(@PathVariable Long userId) {
+    public UserModel find(@PathVariable Long userId) {
         User user = userService.findOrFail(userId);
         
         return userModelAssembler.toModel(user);
@@ -56,7 +56,7 @@ public class UserController {
     
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserModel adicionar(@RequestBody @Valid UserWithPasswordInput userInput) {
+    public UserModel save(@RequestBody @Valid UserWithPasswordInput userInput) {
         User user = userInputDisassembler.toDomainObject(userInput);
         user = userService.save(user);
         
@@ -64,7 +64,7 @@ public class UserController {
     }
     
     @PutMapping("/{userId}")
-    public UserModel atualizar(@PathVariable Long userId,
+    public UserModel update(@PathVariable Long userId,
             @RequestBody @Valid UserInput userInput) {
     	
         User userNow = userService.findOrFail(userId);
@@ -76,7 +76,7 @@ public class UserController {
     
     @PutMapping("/{userId}/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void alterarSenha(@PathVariable Long userId, @RequestBody @Valid UserAlterPassswordInput password) {
-    	userService.alterPassword(userId, password.getNowPassword(), password.getNewPassword());
+    public void alterPassword(@PathVariable Long userId, @RequestBody @Valid UserAlterPassswordInput password) {
+    	userService.alterPassword(userId, password.getCurrentPassword(), password.getNewPassword());
     }            
 }

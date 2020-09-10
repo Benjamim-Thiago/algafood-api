@@ -85,4 +85,8 @@ public class Restaurant {
 	public Boolean removePaymentMode(PaymentMode paymentMode) {
 		return getPaymentsMode().remove(paymentMode);
 	}
+		
+	public boolean addPaymentMode(PaymentMode paymentMode) {
+		return getPaymentsMode().remove(paymentMode);
+	}
 }

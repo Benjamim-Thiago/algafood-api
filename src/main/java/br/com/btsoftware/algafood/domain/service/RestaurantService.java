@@ -55,4 +55,20 @@ public class RestaurantService {
 		return restaurantRepository.findById(restaurantId).orElseThrow(
 				() -> new RestaurantEntityNotExistException(restaurantId));
 	}
+	
+	@Transactional
+	public void desassociateFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		Restaurant restaurante = buscarOuFalhar(restauranteId);
+		FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
+		
+		restaurante.removerFormaPagamento(formaPagamento);
+	}
+	
+	@Transactional
+	public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
+		
+		restaurante.adicionarFormaPagamento(formaPagamento);
+	}
 }

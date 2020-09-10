@@ -81,4 +81,8 @@ public class Restaurant {
 	public void inactivate() {
 		setActive(false);
 	}
+	
+	public Boolean removePaymentMode(PaymentMode paymentMode) {
+		return getPaymentsMode().remove(paymentMode);
+	}
 }

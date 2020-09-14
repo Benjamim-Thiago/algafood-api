@@ -23,6 +23,7 @@ import br.com.btsoftware.algafood.api.model.input.RestaurantInput;
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.exception.CityEntityNotExistException;
 import br.com.btsoftware.algafood.domain.exception.KitchenEntityNotExistException;
+import br.com.btsoftware.algafood.domain.exception.RestaurantEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Restaurant;
 import br.com.btsoftware.algafood.domain.repository.RestaurantRepository;
 import br.com.btsoftware.algafood.domain.service.RestaurantService;
@@ -93,7 +94,39 @@ public class RestaurantController {
 	public void inactivate(@PathVariable Long id) {
 		restaurantService.inactivate(id);
 	}
-
+	
+	@PutMapping("/multiple-activate")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativateMultiples(@RequestBody List<Long> restaurantIds) {
+		try {
+			restaurantService.activate(restaurantIds);
+		} catch (RestaurantEntityNotExistException e) {
+			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+	
+	@DeleteMapping("/multiple-inactivate")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativarMultiples(@RequestBody List<Long> restauranteIds) {
+		try {
+			restaurantService.inactivate(restauranteIds);
+		} catch (RestaurantEntityNotExistException e) {
+			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+	
+	@PutMapping("/{id}/open")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void open(@PathVariable Long id) {
+		restaurantService.open(id);
+	}
+	
+	@PutMapping("/{id}/close")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void close(@PathVariable Long id) {
+		restaurantService.close(id);
+	}
+	
 
 //	@PatchMapping("/{id}")
 //	public Restaurant partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> filds, HttpServletRequest request) {

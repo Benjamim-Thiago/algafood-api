@@ -1,5 +1,6 @@
 package br.com.btsoftware.algafood.api.assembler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ public class PaymentModeModelAssembler {
 		return modelMapper.map(paymentMode, PaymentModeModel.class);
 	}
 	
-	public List<PaymentModeModel> toCollectionModel(List<PaymentMode> payments) {
+	public List<PaymentModeModel> toCollectionModel(Collection<PaymentMode> payments) {
 		return payments.stream()
 				.map(request -> toModel(request))
 				.collect(Collectors.toList());

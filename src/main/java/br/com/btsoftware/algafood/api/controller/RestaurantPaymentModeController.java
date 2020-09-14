@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.btsoftware.algafood.api.assembler.PaymentModeModelAssembler;
-import br.com.btsoftware.algafood.api.assembler.input.RestaurantInputDisassembler;
 import br.com.btsoftware.algafood.api.model.PaymentModeModel;
 import br.com.btsoftware.algafood.domain.model.Restaurant;
-import br.com.btsoftware.algafood.domain.repository.RestaurantRepository;
 import br.com.btsoftware.algafood.domain.service.RestaurantService;
 
 @RestController
@@ -24,17 +22,11 @@ import br.com.btsoftware.algafood.domain.service.RestaurantService;
 public class RestaurantPaymentModeController {
 
 	@Autowired
-	private RestaurantRepository restaurantRepository;
-
-	@Autowired
 	private RestaurantService restaurantService;
 	
 	@Autowired
 	private PaymentModeModelAssembler paymentModeModelAssembler;
-	
-	@Autowired
-	private RestaurantInputDisassembler restaurantInputDisassembler;
-	
+		
 	@GetMapping
 	public List<PaymentModeModel> list(@PathVariable Long restaurantId) {
 		Restaurant restaurant = restaurantService.findOrFail(restaurantId);
@@ -45,13 +37,13 @@ public class RestaurantPaymentModeController {
 	@DeleteMapping("/{paymentModeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void desassociate(@PathVariable Long restaurantId, @PathVariable Long paymentModeId) {
-		restaurantRepository.desassociatePaymentMode(restaurantId, paymentModeId);
+		restaurantService.desassociatePaymentMode(restaurantId, paymentModeId);
 	}
 	
 	@PutMapping("/{paymentModeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void associar(@PathVariable Long restaurantId, @PathVariable Long paymentModeId) {
-		restaurantRepository.associatePaymentMode(restaurantId, paymentModeId);
+		restaurantService.associatePaymentMode(restaurantId, paymentModeId);
 	}
 
 

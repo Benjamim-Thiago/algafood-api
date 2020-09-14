@@ -14,4 +14,5 @@ public class RestaurantModel {
 	private KitchenModel kitchen;
 	private Boolean active = Boolean.TRUE; 
 	private AddressModel address;
+	private Boolean open;
 }

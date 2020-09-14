@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.exception.UserEntityNotExistException;
+import br.com.btsoftware.algafood.domain.model.Group;
 import br.com.btsoftware.algafood.domain.model.User;
 import br.com.btsoftware.algafood.domain.repository.UserRepository;
 
@@ -16,6 +17,9 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private GroupService groupService;
 
 	@Transactional
 	public User save(User user) {
@@ -47,6 +51,22 @@ public class UserService {
 
 	public User findOrFail(Long id) {
 		return userRepository.findById(id).orElseThrow(() -> new UserEntityNotExistException(id));
+	}
+	
+	@Transactional
+	public void disassociateGroup(Long userId, Long groupId) {
+	    User user = findOrFail(userId);
+	    Group group = groupService.findOrFail(groupId);
+	    
+	    user.removeGroup(group);
+	}
+
+	@Transactional
+	public void associateGroup(Long userId, Long groupId) {
+	    User user = findOrFail(userId);
+	    Group group = groupService.findOrFail(groupId);
+	    
+	    user.addGroup(group);
 	}
 
 }

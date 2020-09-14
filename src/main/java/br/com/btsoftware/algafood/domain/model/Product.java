@@ -32,9 +32,17 @@ public class Product {
 
     private BigDecimal price;
     
-    private Boolean active;
+    private Boolean active = Boolean.TRUE;
 
     @ManyToOne
 	@JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;     
+    
+    public void activate() {
+		setActive(true);
+	}
+	
+	public void inactivate() {
+		setActive(false);
+	}
 }

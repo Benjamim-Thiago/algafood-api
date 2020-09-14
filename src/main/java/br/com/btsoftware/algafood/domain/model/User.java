@@ -1,8 +1,8 @@
 package br.com.btsoftware.algafood.domain.model;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,7 +37,7 @@ public class User {
 
 	@ManyToMany
 	@JoinTable(name = "user_group", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
-	private List<Group> groups = new ArrayList<>();
+	private Set<Group> groups = new HashSet<>();
 
 	@CreationTimestamp
 	private OffsetDateTime created;
@@ -48,5 +48,13 @@ public class User {
 
 	public boolean passwordNotWithEquals(String password) {
 		return !passwordWithEquals(password);
+	}
+	
+	public boolean removeGroup(Group group) {
+	    return getGroups().remove(group);
+	}
+
+	public boolean addGroup(Group group) {
+	    return getGroups().add(group);
 	}
 }

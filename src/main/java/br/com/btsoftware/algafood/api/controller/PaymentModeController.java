@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.btsoftware.algafood.api.assembler.PaymentModeModelAssembler;
 import br.com.btsoftware.algafood.api.assembler.input.PaymentModeInputDisassembler;
 import br.com.btsoftware.algafood.api.model.PaymentModeModel;
-import br.com.btsoftware.algafood.api.model.input.PaymentInput;
+import br.com.btsoftware.algafood.api.model.input.PaymentModeInput;
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.exception.PaymentModeEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.PaymentMode;
@@ -54,7 +54,7 @@ public class PaymentModeController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public PaymentModeModel save(@RequestBody @Valid PaymentInput paymentInput) {
+	public PaymentModeModel save(@RequestBody @Valid PaymentModeInput paymentInput) {
 		try {
 
 			PaymentMode paymentMode = paymentModeInputDisassembler.toDomainObject(paymentInput);
@@ -66,7 +66,7 @@ public class PaymentModeController {
 	}
 
 	@PutMapping("/{id}")
-	public PaymentModeModel update(@PathVariable Long id, @RequestBody @Valid PaymentInput paymentInput) {
+	public PaymentModeModel update(@PathVariable Long id, @RequestBody @Valid PaymentModeInput paymentInput) {
 		try {
 			PaymentMode paymentModeInDataBase = paymentModeService.findOrFail(id);
 

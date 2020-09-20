@@ -5,11 +5,13 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,7 +42,7 @@ public class Request {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name = "restaurant_id", nullable = false)
 	private Restaurant restaurant;
 	
@@ -51,7 +53,7 @@ public class Request {
 	@Embedded
     private Address deliveryAddress;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "payment_mode_id")
 	private PaymentMode paymentMode;
 
@@ -70,7 +72,7 @@ public class Request {
 	@Column(name = "confirmation_date")
 	private OffsetDateTime confirmationDate;
 	
-	@Column(name = "cancellatioLocalDaten_date")
+	@Column(name = "cancellation_date")
 	private OffsetDateTime cancellationDate;
 	
 	@Column(name = "delivery_date")
@@ -78,8 +80,33 @@ public class Request {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
-	private RequestStatus requestStatus;
+	private RequestStatus requestStatus = RequestStatus.CREATED;
 	
-	@OneToMany(mappedBy = "request")
+	@OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
 	private List<RequestItem> items = new ArrayList<>();
+	
+	public void calculatePriceTotal() {
+		getItems().forEach(RequestItem::calculatePriceTotal);
+	    
+	    this.subTotal = getItems().stream()
+	        .map(item -> item.getPriceTotal())
+	        .reduce(BigDecimal.ZERO, BigDecimal::add);
+	    
+	    this.valueTotal = this.subTotal.add(this.deliveryFee);
+	    
+	}
+	
+	/***
+	 * Define frete
+	 */
+	public void defineShipping() {
+		setDeliveryFee(getRestaurant().getDeliveryFee());
+	}
+
+	/***
+	 *  Atribuição do pedido aos itens
+	 */
+	public void assignRequestToItems() {
+	    getItems().forEach(item -> item.setRequest(this));
+	}
 }

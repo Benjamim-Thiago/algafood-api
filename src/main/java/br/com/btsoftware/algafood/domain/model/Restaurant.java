@@ -113,4 +113,12 @@ public class Restaurant {
 	public boolean addCorporateOfficer(User user) {
 	    return getCorporate_officers().add(user);
 	}
+	
+	public boolean acceptPaymentMode(PaymentMode paymentMode) {
+	    return getPaymentsMode().contains(paymentMode);
+	}
+
+	public boolean doesNoAcceptPaymentMode(PaymentMode paymentMode) {
+	    return !acceptPaymentMode(paymentMode);
+	}
 }

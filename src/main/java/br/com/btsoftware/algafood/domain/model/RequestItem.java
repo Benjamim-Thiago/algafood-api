@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +26,7 @@ public class RequestItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="request_id",nullable = false)
 	private Request request;
 	
@@ -41,5 +42,20 @@ public class RequestItem {
 	private BigDecimal priceTotal;
 	
 	private String comment;
+	
+	public void calculatePriceTotal() {
+	    BigDecimal priceUnit = this.getPrice();
+	    Integer amount = this.getAmount();
+
+	    if (priceUnit == null) {
+	    	priceUnit = BigDecimal.ZERO;
+	    }
+
+	    if (amount == null) {
+	        amount = 0;
+	    }
+
+	    this.setPriceTotal(priceUnit.multiply(new BigDecimal(amount)));
+	}
 	
 }

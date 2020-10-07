@@ -24,6 +24,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.model.enumerable.RequestStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -112,5 +113,32 @@ public class Request {
 	 */
 	public void assignRequestToItems() {
 	    getItems().forEach(item -> item.setRequest(this));
+	}
+	
+	
+	public void confirme() {
+		setRequestStatus(RequestStatus.CONFIRMED);
+		setConfirmationDate(OffsetDateTime.now());
+	}
+	
+	public void deliver() {
+		setRequestStatus(RequestStatus.DELIVERED);
+		setDeliveryDate(OffsetDateTime.now());
+	}
+	
+	public void cancel() {
+		setRequestStatus(RequestStatus.CANCELED);
+		setCancellationDate(OffsetDateTime.now());
+	}
+	
+	private void setRequestStatus(RequestStatus newStatus) {
+		if (getRequestStatus().canNotChangeTo(newStatus)) {
+			throw new BusinessException(
+					String.format("Status do pedido %d não pode ser alterado de %s para %s",
+							getId(), getRequestStatus().getDescription(), 
+							newStatus.getDescription()));
+		}
+		
+		this.requestStatus = newStatus;
 	}
 }

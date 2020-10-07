@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -44,6 +46,8 @@ public class Request {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private String code;
 	
 	@ManyToOne()
 	@JoinColumn(name = "restaurant_id", nullable = false)
@@ -134,11 +138,16 @@ public class Request {
 	private void setRequestStatus(RequestStatus newStatus) {
 		if (getRequestStatus().canNotChangeTo(newStatus)) {
 			throw new BusinessException(
-					String.format("Status do pedido %d não pode ser alterado de %s para %s",
-							getId(), getRequestStatus().getDescription(), 
+					String.format("Status do pedido %s não pode ser alterado de %s para %s",
+							getCode(), getRequestStatus().getDescription(), 
 							newStatus.getDescription()));
 		}
 		
 		this.requestStatus = newStatus;
+	}
+	
+	@PrePersist
+	private void generateCode() {
+		setCode(UUID.randomUUID().toString());
 	}
 }

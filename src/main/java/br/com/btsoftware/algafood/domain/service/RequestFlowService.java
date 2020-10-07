@@ -14,20 +14,20 @@ public class RequestFlowService {
 	
 	
 	@Transactional
-	public void statusConfirmed(Long requestId) {
-		Request request = requestService.findOrFail(requestId);
+	public void statusConfirmed(String code) {
+		Request request = requestService.findOrFail(code);
 		request.confirme();
 	}
 	
 	@Transactional
-	public void cancel(Long requestId) {
-	    Request request = requestService.findOrFail(requestId);	    
+	public void cancel(String code) {
+	    Request request = requestService.findOrFail(code);	    
 	    request.cancel();
 	}
 
 	@Transactional
-	public void deliver(Long requestId) {
-	    Request request = requestService.findOrFail(requestId);
+	public void deliver(String code) {
+	    Request request = requestService.findOrFail(code);
 	    request.deliver();
 	}
 }

@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class RequestModel {
 	
-	private Long id;
+	private String code;
 	private RestaurantResumeModel restaurant;
 	private UserModel client;
 	private AddressModel deliveryAddress;

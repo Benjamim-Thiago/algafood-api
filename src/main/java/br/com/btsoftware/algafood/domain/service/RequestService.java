@@ -13,7 +13,7 @@ public class RequestService {
 	@Autowired
 	private RequestRepository requestRepository;
 	
-	public Request findOrFail(Long id) {
-		return requestRepository.findById(id).orElseThrow(() -> new RequestEntityNotExistException(id));
+	public Request findOrFail(String code) {
+		return requestRepository.findByCode(code).orElseThrow(() -> new RequestEntityNotExistException(code));
 	}
 }

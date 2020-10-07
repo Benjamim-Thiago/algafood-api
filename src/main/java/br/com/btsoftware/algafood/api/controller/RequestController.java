@@ -56,9 +56,9 @@ public class RequestController {
         return requestResumeModelAssembler.toCollectionModel(allRequests);
     }
     
-    @GetMapping("/{requestId}")
-    public RequestModel find(@PathVariable Long requestId) {
-        Request request = requestService.findOrFail(requestId);
+    @GetMapping("/{code}")
+    public RequestModel find(@PathVariable String code) {
+        Request request = requestService.findOrFail(code);
         
         return requestModelAssembler.toModel(request);
     }            

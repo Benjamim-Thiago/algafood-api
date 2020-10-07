@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.btsoftware.algafood.domain.service.RequestFlowService;
 
 @RestController
-@RequestMapping(value = "/requests/{requestId}")
+@RequestMapping(value = "/requests/{code}")
 public class RequestFlowController {
 	
 	@Autowired
@@ -19,19 +19,19 @@ public class RequestFlowController {
 	
 	@PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void confimed(@PathVariable Long requestId) {
-		requestFlowService.statusConfirmed(requestId);
+    public void confimed(@PathVariable String code) {
+		requestFlowService.statusConfirmed(code);
     }
 	
 	@PutMapping("/cancel")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void cancel(@PathVariable Long requestId) {
-		requestFlowService.cancel(requestId);
+	public void cancel(@PathVariable String code) {
+		requestFlowService.cancel(code);
 	}
 
 	@PutMapping("/deliver")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deliver(@PathVariable Long requestId) {
-		requestFlowService.deliver(requestId);
+	public void deliver(@PathVariable String code) {
+		requestFlowService.deliver(code);
 	}
 }

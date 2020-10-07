@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class RequestResumeModel {
 	
-	private Long id;
+	private String code;
 	private RestaurantResumeModel restaurant;
 	private UserModel client;
 	private BigDecimal subTotal;

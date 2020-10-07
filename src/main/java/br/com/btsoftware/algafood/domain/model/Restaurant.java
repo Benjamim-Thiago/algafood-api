@@ -23,6 +23,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.btsoftware.algafood.core.validation.ValueZeroIncludeDescription;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -66,13 +68,16 @@ public class Restaurant {
 	private Boolean active = Boolean.TRUE;
 
 	@ManyToMany()
+	@JsonIgnore
 	@JoinTable(name = "restaurant_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
 	private Set<PaymentMode> paymentsMode = new HashSet<>();
 
 	@OneToMany(mappedBy = "restaurant")
+	@JsonIgnore
 	private List<Product> products = new ArrayList<>();
 
 	@ManyToMany
+	@JsonIgnore
 	@JoinTable(name = "restaurant_user_corporate_officer", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<User> corporate_officers = new HashSet<>();
 

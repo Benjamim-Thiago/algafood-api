@@ -22,6 +22,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.btsoftware.algafood.domain.model.enumerable.RequestStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,6 +55,7 @@ public class Request {
 	@Embedded
     private Address deliveryAddress;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "payment_mode_id")
 	private PaymentMode paymentMode;
@@ -82,6 +85,7 @@ public class Request {
 	@Column(name = "status")
 	private RequestStatus requestStatus = RequestStatus.CREATED;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
 	private List<RequestItem> items = new ArrayList<>();
 	

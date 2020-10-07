@@ -25,6 +25,7 @@ import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Request;
 import br.com.btsoftware.algafood.domain.model.User;
 import br.com.btsoftware.algafood.domain.repository.RequestRepository;
+import br.com.btsoftware.algafood.domain.service.RequestIssueService;
 import br.com.btsoftware.algafood.domain.service.RequestService;
 
 @RestController
@@ -35,6 +36,9 @@ public class RequestController {
     
     @Autowired
     private RequestService requestService;
+    
+    @Autowired
+    private RequestIssueService issueRequestService;
     
     @Autowired
     private RequestResumeModelAssembler requestResumeModelAssembler;
@@ -69,7 +73,7 @@ public class RequestController {
             newRequest.setClient(new User());
             newRequest.getClient().setId(1L);
 
-            newRequest = requestService.save(newRequest);
+            newRequest = issueRequestService.save(newRequest);
 
             return requestModelAssembler.toModel(newRequest);
         } catch (EntityNotExistException e) {

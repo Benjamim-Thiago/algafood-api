@@ -1,7 +1,10 @@
 package br.com.btsoftware.algafood.domain.model.enumerable;
 
 public enum RequestStatus {
-	CREATED("CRIADO"), CONFIRMED("CONFIRMADO"), DELIVERED("ENTREGUE"), CANCELED("CANCELADO");
+	CREATED("CRIADO"), 
+	CONFIRMED("CONFIRMADO"), 
+	DELIVERED("ENTREGUE"), 
+	CANCELED("CANCELADO");
 	
 	private final String description;
 	

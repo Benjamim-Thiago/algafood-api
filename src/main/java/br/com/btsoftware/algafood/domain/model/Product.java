@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -35,6 +37,7 @@ public class Product {
     private Boolean active = Boolean.TRUE;
 
     @ManyToOne
+    @JsonIgnore
 	@JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;     
     

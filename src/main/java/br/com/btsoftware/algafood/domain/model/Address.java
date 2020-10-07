@@ -6,10 +6,13 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 @Data
 @Embeddable
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Address {
 	@Column(name = "address_zipcode")
 	private String zipcode;
@@ -26,7 +29,8 @@ public class Address {
 	@Column(name = "address_neighborhood")
 	private String neighborhood;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	//@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "address_city_id")
 	private City city;
 }

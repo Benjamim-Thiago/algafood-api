@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -28,6 +30,7 @@ public class RequestItem {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="request_id",nullable = false)
+	@JsonIgnore
 	private Request request;
 	
 	@ManyToOne

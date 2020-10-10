@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import br.com.btsoftware.algafood.api.assembler.RestaurantModelAssembler;
 import br.com.btsoftware.algafood.api.assembler.input.RestaurantInputDisassembler;
 import br.com.btsoftware.algafood.api.model.RestaurantModel;
 import br.com.btsoftware.algafood.api.model.input.RestaurantInput;
+import br.com.btsoftware.algafood.api.model.view.RestaurantView;
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.exception.CityEntityNotExistException;
 import br.com.btsoftware.algafood.domain.exception.KitchenEntityNotExistException;
@@ -44,9 +47,16 @@ public class RestaurantController {
 	@Autowired
 	private RestaurantInputDisassembler restaurantInputDisassembler;
 	
+	@JsonView(RestaurantView.Resume.class)
 	@GetMapping
 	public List<RestaurantModel> list() {
 		return restaurantAssembler.toCollectionModel(restaurantRepository.findAll());
+	}
+	
+	@JsonView(RestaurantView.OnlyIdAndName.class)
+	@GetMapping(params = "projecao=apenas-nome")
+	public List<RestaurantModel> listOnlyIdAndName() {
+		return list();
 	}
 
 	@GetMapping("/{id}")

@@ -3,11 +3,12 @@ package br.com.btsoftware.algafood.domain.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import br.com.btsoftware.algafood.domain.model.Request;
 
-public interface RequestRepository extends CustomJpaRepository<Request, Long> {
+public interface RequestRepository extends CustomJpaRepository<Request, Long>,JpaSpecificationExecutor<Request> {
 	
 	Optional<Request> findByCode(String code);
 	

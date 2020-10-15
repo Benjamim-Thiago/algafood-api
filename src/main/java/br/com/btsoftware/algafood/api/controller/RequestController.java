@@ -25,8 +25,10 @@ import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.Request;
 import br.com.btsoftware.algafood.domain.model.User;
 import br.com.btsoftware.algafood.domain.repository.RequestRepository;
+import br.com.btsoftware.algafood.domain.repository.filter.RequestFilter;
 import br.com.btsoftware.algafood.domain.service.RequestIssueService;
 import br.com.btsoftware.algafood.domain.service.RequestService;
+import br.com.btsoftware.algafood.infrastructure.repository.spec.RequestSpecs;
 
 @RestController
 @RequestMapping(value = "/requests")
@@ -50,8 +52,8 @@ public class RequestController {
     private RequestInputDisassembler requestInputDisassembler;
     
     @GetMapping
-    public List<RequestResumeModel> list() {
-        List<Request> allRequests = requestRepository.findAll();
+    public List<RequestResumeModel> search(RequestFilter filter) {
+        List<Request> allRequests = requestRepository.findAll(RequestSpecs.searchUseFilter(filter));
         
         return requestResumeModelAssembler.toCollectionModel(allRequests);
     }

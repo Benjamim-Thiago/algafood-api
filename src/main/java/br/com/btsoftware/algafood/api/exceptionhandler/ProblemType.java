@@ -1,4 +1,4 @@
-package br.com.btsoftware.algafood.api.controller.exceptionhandler;
+package br.com.btsoftware.algafood.api.exceptionhandler;
 
 import lombok.Getter;
 

@@ -14,9 +14,11 @@ public class RequestSpecs {
 	public static Specification<Request> searchUseFilter(RequestFilter filter) {
 		return (root, query, builder) ->{
 			
-			root.fetch("restaurant").fetch("kitchen");
-			root.fetch("restaurant").fetch("address").fetch("city").fetch("state");
-			root.fetch("client");
+			if (Request.class.equals(query.getResultType())) {
+				root.fetch("restaurant").fetch("kitchen");
+				root.fetch("restaurant").fetch("address").fetch("city").fetch("state");
+				root.fetch("client");
+			}
 			
 			var predicates = new ArrayList<Predicate>();
 			

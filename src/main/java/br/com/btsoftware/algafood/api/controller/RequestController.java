@@ -5,6 +5,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,10 +56,15 @@ public class RequestController {
     private RequestInputDisassembler requestInputDisassembler;
     
     @GetMapping
-    public List<RequestResumeModel> search(RequestFilter filter) {
-        List<Request> allRequests = requestRepository.findAll(RequestSpecs.searchUseFilter(filter));
+    public Page<RequestResumeModel> search(RequestFilter filter, @PageableDefault(size = 10) Pageable pageable) {
+        Page<Request> allRequests = requestRepository.findAll(RequestSpecs.searchUseFilter(filter), pageable);
+                       
+        List<RequestResumeModel> requestModel = requestResumeModelAssembler.toCollectionModel(allRequests.getContent());
         
-        return requestResumeModelAssembler.toCollectionModel(allRequests);
+        Page<RequestResumeModel> requestModelPage = new PageImpl<>(requestModel, pageable, 
+				allRequests.getTotalElements());
+        
+        return requestModelPage;
     }
     
     @GetMapping("/{code}")

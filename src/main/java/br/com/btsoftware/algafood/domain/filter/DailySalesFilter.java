@@ -1,4 +1,4 @@
-package br.com.btsoftware.algafood.domain.repository.filter;
+package br.com.btsoftware.algafood.domain.filter;
 
 import java.time.OffsetDateTime;
 
@@ -10,13 +10,13 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class RequestFilter {
-	public Long clientId;
+public class DailySalesFilter {
+
 	private Long restaurantId;
-	
+
 	@DateTimeFormat(iso = ISO.DATE_TIME)
 	private OffsetDateTime firstCreatedDate;
-	
+
 	@DateTimeFormat(iso = ISO.DATE_TIME)
 	private OffsetDateTime lastCreatedDate;
 }

@@ -1,6 +1,7 @@
 package br.com.btsoftware.algafood.infrastructure.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -22,14 +23,16 @@ public class SaleQueryServiceImpl implements SaleQueryService {
 	private EntityManager manager;
 	
 	@Override
-	public List<DailySales> findDailySales(DailySalesFilter filter) {
+	public List<DailySales> findDailySales(DailySalesFilter filter, String timeOffset) {
 		var builder = manager.getCriteriaBuilder();
 		var query = builder.createQuery(DailySales.class);
 		var root = query.from(Request.class);
 		
+		var functionConvertTzDateCreated = builder.function("timezone", Date.class, builder.literal(timeOffset), root.get("created"));
+		
 		var functionDateCreated = builder.function("TO_CHAR", String.class,
-						root.get("created"), 
-						builder.literal("yyyy-MM-dd"));;
+				functionConvertTzDateCreated, 
+						builder.literal("yyyy-MM-dd"));
 				
 		
 		var selection = builder.construct(DailySales.class,
@@ -49,6 +52,7 @@ public class SaleQueryServiceImpl implements SaleQueryService {
 		    		filter.getFirstCreatedDate()));
 		}
 
+		System.out.println(filter.getLastCreatedDate());
 		if (filter.getLastCreatedDate() != null) {
 		    predicates.add(builder.lessThanOrEqualTo(root.get("created"), 
 		            filter.getLastCreatedDate()));

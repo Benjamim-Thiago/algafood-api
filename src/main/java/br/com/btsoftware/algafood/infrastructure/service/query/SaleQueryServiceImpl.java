@@ -1,4 +1,4 @@
-package br.com.btsoftware.algafood.infrastructure.service;
+package br.com.btsoftware.algafood.infrastructure.service.query;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +52,6 @@ public class SaleQueryServiceImpl implements SaleQueryService {
 		    		filter.getFirstCreatedDate()));
 		}
 
-		System.out.println(filter.getLastCreatedDate());
 		if (filter.getLastCreatedDate() != null) {
 		    predicates.add(builder.lessThanOrEqualTo(root.get("created"), 
 		            filter.getLastCreatedDate()));

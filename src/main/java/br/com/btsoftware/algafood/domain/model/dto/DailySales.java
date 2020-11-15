@@ -13,4 +13,5 @@ public class DailySales {
 	private String date;
 	private Long totalSales;
 	private BigDecimal totalBilled;
+	
 }

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily-sales" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d641125b-b328-447b-982d-844b427731e9">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="random"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="date" class="java.lang.String"/>
+	<field name="totalSales" class="java.lang.Long"/>
+	<field name="totalBilled" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="40" forecolor="#FFFFFF" backcolor="#9C9595" uuid="af301544-dc21-4d47-b4c9-0a2f94164295"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22"/>
+				</textElement>
+				<text><![CDATA[RELATÓRIO DE VENDAS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="26" uuid="2407b990-df49-4d03-8554-cc34e4ce3c8e"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="117" y="0" width="100" height="26" uuid="5ae2ddd7-8708-4f99-8932-fc5c761befa4"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[QTD VENDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="236" y="0" width="140" height="26" uuid="8b06b538-3aa1-4147-ba4d-28a666045fa3"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL FATURADO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="23" uuid="5adaaf14-a989-44d3-9c73-52d31f069d7e"/>
+				<textFieldExpression><![CDATA[$F{date}.substring(8, 10) + "/" + $F{date}.substring(5, 7) + "/" + $F{date}.substring(0, 4)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="0" width="100" height="23" uuid="1469ec65-560b-442d-9072-e3a0a741af89"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{totalSales}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.##;¤-#,##0.00">
+				<reportElement x="236" y="0" width="140" height="23" uuid="bc8b08c5-d583-442d-805b-8ef850ea968b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{totalBilled}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -35,4 +35,13 @@ public class PhotoProduct {
 	private String contentType;
 	
 	private Long size;
+	
+	public Long restaurantId () {
+		if (getProduct() != null) {
+			return getProduct().getRestaurant().getId();
+		}
+		
+		return null;
+	}
+
 }

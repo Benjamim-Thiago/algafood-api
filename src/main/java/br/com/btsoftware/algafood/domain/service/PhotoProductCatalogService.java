@@ -7,15 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.btsoftware.algafood.domain.exception.PhotoProductEntityNotExistException;
 import br.com.btsoftware.algafood.domain.model.PhotoProduct;
 import br.com.btsoftware.algafood.domain.repository.ProductRepository;
 import br.com.btsoftware.algafood.domain.service.PhotoStorageService.NewPhoto;
 
 @Service
-public class PhotoProductCatalog {
+public class PhotoProductCatalogService {
 	@Autowired
 	private ProductRepository productRepository;
-	
+		
 	@Autowired
 	private PhotoStorageService  photoStorageService;
 	
@@ -49,5 +50,20 @@ public class PhotoProductCatalog {
 		photoStorageService.replaceFile(nameOldFile, newPhoto);
 		
 		return photo;
+	}
+	
+	public PhotoProduct findOrFail(Long restaurantId, Long productId) {
+		return productRepository.findFotoById(restaurantId, productId)
+				.orElseThrow(() -> new PhotoProductEntityNotExistException(restaurantId, productId));
+	}
+	
+	@Transactional
+	public void remove(Long restaurantId, Long productId) {
+	    PhotoProduct photo = findOrFail(restaurantId, productId);
+	    
+	    productRepository.delete(photo);
+	    productRepository.flush();
+
+	    photoStorageService.remove(photo.getFileName());
 	}
 }

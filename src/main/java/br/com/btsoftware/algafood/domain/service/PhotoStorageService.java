@@ -32,6 +32,8 @@ public interface PhotoStorageService {
 	class NewPhoto {
 		
 		private String fileName;
+		private String contentType;
+		private Long size;
 		private InputStream inputStream;
 		
 	}

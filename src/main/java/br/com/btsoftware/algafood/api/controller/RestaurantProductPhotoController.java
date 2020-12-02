@@ -49,7 +49,7 @@ public class RestaurantProductPhotoController {
 	private PhotoProductModelAssembler photoProductModelAssembler;
 	
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public PhotoProductModel atualizarFoto(@PathVariable Long restaurantId, @PathVariable Long productId,
+	public PhotoProductModel sendFoto(@PathVariable Long restaurantId, @PathVariable Long productId,
 			@Valid PhotoProductInput photoProductInput) throws IOException {
 
 		Product product = productService.findOrFail(restaurantId, productId);

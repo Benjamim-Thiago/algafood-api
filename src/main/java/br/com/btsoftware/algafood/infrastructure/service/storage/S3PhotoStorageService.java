@@ -1,6 +1,6 @@
 package br.com.btsoftware.algafood.infrastructure.service.storage;
 
-import java.io.InputStream;
+import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,15 @@ public class S3PhotoStorageService implements PhotoStorageService {
 	private AmazonS3 amazonS3;
 	
 	@Override
-	public InputStream recover(String fileName) {
-		// TODO Auto-generated method stub
-		return null;
+	public ToRecoverPhoto recover(String fileName) {
+		
+		String fileDirectory = getFileDirectory(fileName);
+
+		URL url = amazonS3.getUrl(storageProperties.getS3().getBucket(), fileDirectory);
+		
+		return ToRecoverPhoto.builder()
+				.url(url.toString()).build();
+		
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import lombok.Getter;
 
 public interface PhotoStorageService {
 	
-	InputStream recover(String fileName);
+	ToRecoverPhoto recover(String fileName);
 	
 	void store(NewPhoto newPhoto);
 	
@@ -37,4 +37,22 @@ public interface PhotoStorageService {
 		private InputStream inputStream;
 		
 	}
+	
+	@Builder
+	@Getter
+	class ToRecoverPhoto {
+		
+		private InputStream inputStream;
+		private String url; 
+		
+		public Boolean temUrl() {
+			return this.url != null;
+		}
+		
+		public Boolean temInputStream() {
+			return this.inputStream != null;
+		}
+		
+	}
+	
 }

@@ -9,7 +9,6 @@ import org.springframework.util.FileCopyUtils;
 import br.com.btsoftware.algafood.core.storage.StorageProperties;
 import br.com.btsoftware.algafood.domain.service.PhotoStorageService;
 
-//@Service
 public class LocalPhotoStorageService implements PhotoStorageService {
 
 	@Autowired

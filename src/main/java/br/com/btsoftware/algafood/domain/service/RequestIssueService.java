@@ -66,7 +66,8 @@ public class RequestIssueService {
 	}
 	
 	private void validateItems(Request request) {
-	    request.getItems().forEach(item -> {
+	
+		request.getItems().forEach(item -> {
 	        Product product = productService.findOrFail(
 	                request.getRestaurant().getId(), item.getProduct().getId());
 	        

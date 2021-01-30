@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import br.com.btsoftware.algafood.core.email.EmailProperties;
@@ -15,9 +14,8 @@ import br.com.btsoftware.algafood.domain.service.SendEmailService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-@Service
-@ConditionalOnProperty(name = "algafood.email.impl", havingValue ="smtp")
-public class SmtpSendEmailService implements SendEmailService {
+@ConditionalOnProperty(name = "algafood.email.impl", havingValue ="sandbox")
+public class SandboxSendEmailService implements SendEmailService {
 
 	@Autowired
 	private JavaMailSender mailSender;
@@ -59,7 +57,7 @@ public class SmtpSendEmailService implements SendEmailService {
 		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 		
 		helper.setFrom(emailProperties.getSender());
-		helper.setTo(message.getRecipients().toArray(new String[0]));
+		helper.setTo(emailProperties.getSandbox().getRecipient());
 		helper.setSubject(message.getSubject());
 		helper.setText(body, true);
 		

@@ -1,11 +1,15 @@
 package br.com.btsoftware.algafood.api.controller;
 
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import br.com.btsoftware.algafood.api.assembler.PaymentModeModelAssembler;
 import br.com.btsoftware.algafood.api.assembler.input.PaymentModeInputDisassembler;
@@ -43,13 +49,64 @@ public class PaymentModeController {
 	private PaymentModeInputDisassembler paymentModeInputDisassembler;
 
 	@GetMapping()
-	public List<PaymentModeModel> list() {
-		return paymentModeModelAssembler.toCollectionModel(paymentModeRepository.findAll());
+	public ResponseEntity<List<PaymentModeModel>> list(ServletWebRequest request) {
+
+		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+		String eTag = "0";
+
+		OffsetDateTime lastUpdated = paymentModeRepository.getUpdateDateLast();
+
+		if (lastUpdated != null) {
+			eTag = String.valueOf(lastUpdated.toEpochSecond());
+		}
+
+		if (request.checkNotModified(eTag)) {
+			return null;
+		}
+
+		List<PaymentMode> allPaymentModes = paymentModeRepository.findAll();
+
+		List<PaymentModeModel> paymentModeModel = paymentModeModelAssembler.toCollectionModel(allPaymentModes);
+
+		return ResponseEntity.ok()				
+//				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+//				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+//				.cacheControl(CacheControl.noCache())
+//				.cacheControl(CacheControl.noStore())
+				.eTag(eTag)
+				.body(paymentModeModel);
 	}
 
 	@GetMapping("/{id}")
-	public PaymentModeModel find(@PathVariable Long id) {
-		return paymentModeModelAssembler.toModel(paymentModeService.findOrFail(id));
+	public ResponseEntity<PaymentModeModel> find(@PathVariable Long id, ServletWebRequest request) {
+
+		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+
+		String eTag = "0";
+
+		OffsetDateTime lastUpdated = paymentModeRepository.getUpdateDateLast();
+
+		if (lastUpdated != null) {
+			eTag = String.valueOf(lastUpdated.toEpochSecond());
+		}
+
+		if (request.checkNotModified(eTag)) {
+			return null;
+		}
+
+		
+		
+		PaymentMode paymentMode = paymentModeService.findOrFail(id);
+
+		PaymentModeModel paymentModeModel = paymentModeModelAssembler.toModel(paymentMode);
+
+		return ResponseEntity.ok()
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				.eTag(eTag)
+				.body(paymentModeModel);
+
 	}
 
 	@PostMapping
@@ -80,8 +137,8 @@ public class PaymentModeController {
 	}
 
 	/*
-	 * @DeleteMapping("/{id}") public ResponseEntity<PaymentMode> remove(@PathVariable
-	 * Long id) { try {
+	 * @DeleteMapping("/{id}") public ResponseEntity<PaymentMode>
+	 * remove(@PathVariable Long id) { try {
 	 * 
 	 * paymentModeService.remove(id); return ResponseEntity.noContent().build();
 	 * 

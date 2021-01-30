@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.btsoftware.algafood.domain.model.Request;
-import br.com.btsoftware.algafood.domain.service.SendEmailService.Message;
+import br.com.btsoftware.algafood.domain.repository.RequestRepository;
 
 /***
  * 
@@ -16,31 +16,27 @@ import br.com.btsoftware.algafood.domain.service.SendEmailService.Message;
 public class RequestFlowService {
 	
 	@Autowired
-	private RequestService requestService;
+	private RequestRepository requestRepository;
 	
 	@Autowired
-	private SendEmailService sendEmail;
-	
+	private RequestService requestService;
+		
 	@Transactional
 	public void statusConfirmed(String code) {
 		Request request = requestService.findOrFail(code);
 	
 		request.confirme();
 	
-	var menssage = Message.builder()
-				.subject(request.getRestaurant().getName() + " - Pedido confirmado")
-				.body("confirmed_request.html")
-				.recipient(request.getClient().getEmail())
-				.variable("request", request)
-				.build();
-		
-		sendEmail.send(menssage);
+		requestRepository.save(request);
+
 	}
 	
 	@Transactional
 	public void cancel(String code) {
 	    Request request = requestService.findOrFail(code);	    
 	    request.cancel();
+	    
+	    requestRepository.save(request);
 	}
 
 	@Transactional

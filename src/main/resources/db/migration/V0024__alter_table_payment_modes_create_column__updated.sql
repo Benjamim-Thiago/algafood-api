@@ -1,0 +1,4 @@
+ALTER TABLE payment_modes ADD COLUMN updated TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT timezone('UTC', now());
+
+ALTER TABLE payment_modes ALTER COLUMN updated DROP DEFAULT;
+

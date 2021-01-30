@@ -1,10 +1,14 @@
 package br.com.btsoftware.algafood.domain.model;
 
+import java.time.OffsetDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,12 +18,15 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "payment_modes")
 public class PaymentMode {
-	
-	 @EqualsAndHashCode.Include
-     @Id
-     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     private Long id;
-     
-     private String description;
-     
+
+	@EqualsAndHashCode.Include
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private String description;
+
+	@UpdateTimestamp
+	private OffsetDateTime updated;
+
 }

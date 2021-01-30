@@ -42,4 +42,5 @@ public interface SendEmailService {
 		private Map<String, Object> variables;
 	}
 	
+	
 }

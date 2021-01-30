@@ -23,9 +23,12 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.btsoftware.algafood.domain.event.RequestCanceledEvent;
+import br.com.btsoftware.algafood.domain.event.RequestConfirmedEvent;
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.model.enumerable.RequestStatus;
 import lombok.Data;
@@ -39,8 +42,9 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "requests")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Request {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+//AbstractAggregateRoot Laçar eventos
+public class Request extends AbstractAggregateRoot<Request>{
 	
 	@EqualsAndHashCode.Include
 	@Id
@@ -123,6 +127,8 @@ public class Request {
 	public void confirme() {
 		setRequestStatus(RequestStatus.CONFIRMED);
 		setConfirmationDate(OffsetDateTime.now());
+		
+		registerEvent(new RequestConfirmedEvent(this));
 	}
 	
 	public void deliver() {
@@ -133,6 +139,8 @@ public class Request {
 	public void cancel() {
 		setRequestStatus(RequestStatus.CANCELED);
 		setCancellationDate(OffsetDateTime.now());
+		
+		registerEvent(new RequestCanceledEvent(this));
 	}
 	
 	private void setRequestStatus(RequestStatus newStatus) {

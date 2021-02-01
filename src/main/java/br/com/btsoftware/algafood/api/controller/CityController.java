@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.btsoftware.algafood.api.ResourceUriHelper;
 import br.com.btsoftware.algafood.api.assembler.CityModelAssembler;
 import br.com.btsoftware.algafood.api.assembler.input.CityInputDisassembler;
 import br.com.btsoftware.algafood.api.exceptionhandler.Problem;
@@ -63,17 +64,21 @@ public class CityController {
 		return cityModelAssembler.toModel(cityService.findOrFail(id));
 	}
 
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation("CRIA UMA NOVA CIDADE")
 	@ApiResponses({ @ApiResponse(code = 201, message = "Cidade cadastrada"), })
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public CityModel save(
 			@ApiParam(name = "corpo", value = "Representação de uma nova cidade") @RequestBody @Valid CityInput cityInput) {
 		try {
 
 			City city = cityInputDisassembler.toDomainObject(cityInput);
 
-			return cityModelAssembler.toModel(cityService.save(city));
+			CityModel cityModel = cityModelAssembler.toModel(cityService.save(city)); 
+			
+			ResourceUriHelper.addUriInResponseHeader(cityModel.getId());
+			
+			return cityModel;
 
 		} catch (StateEntityNotExistException e) {
 			throw new BusinessException(e.getMessage(), e);

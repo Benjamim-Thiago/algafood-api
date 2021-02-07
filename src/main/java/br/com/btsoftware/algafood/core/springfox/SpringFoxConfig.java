@@ -1,4 +1,4 @@
-package br.com.btsoftware.algafood.core.openapi;
+package br.com.btsoftware.algafood.core.springfox;
 
 import java.util.Arrays;
 import java.util.List;

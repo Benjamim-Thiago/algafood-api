@@ -1,5 +1,8 @@
 package br.com.btsoftware.algafood.api.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -61,7 +64,22 @@ public class CityController {
 	@ApiResponses({ @ApiResponse(code = 400, message = "ID da cidade inválido", response = Problem.class),
 			@ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class) })
 	public CityModel find(@ApiParam(value = "ID de uma cidade", example = "1") @PathVariable Long id) {
-		return cityModelAssembler.toModel(cityService.findOrFail(id));
+		
+		CityModel cityModel = cityModelAssembler.toModel(cityService.findOrFail(id));
+		
+		cityModel.add(linkTo(methodOn(CityController.class)
+				.find(cityModel.getId())).withSelfRel());
+	
+		cityModel.add(linkTo(methodOn(CityController.class)
+				.list()).withRel("citys"));
+		
+	
+		cityModel.getState().add(linkTo(methodOn(StateController.class)
+				.find(cityModel.getState().getId())).withSelfRel());
+		
+
+		
+		return cityModel;
 	}
 
 	@ApiOperation("CRIA UMA NOVA CIDADE")

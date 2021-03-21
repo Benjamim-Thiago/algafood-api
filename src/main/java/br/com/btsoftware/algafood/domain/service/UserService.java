@@ -3,6 +3,7 @@ package br.com.btsoftware.algafood.domain.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ public class UserService {
 	
 	@Autowired
 	private GroupService groupService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Transactional
 	public User save(User user) {
@@ -32,6 +36,10 @@ public class UserService {
 					String.format("Já existe um usuário cadastrado com o e-mail %s", user.getEmail()));	
 		}
 		
+		if (user.isNew()) {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));			
+		}
+		
 		return userRepository.save(user);
 	}
 
@@ -41,11 +49,11 @@ public class UserService {
 
 		 User user = findOrFail(userId);
 	        
-	        if (user.passwordNotWithEquals(nowPassword)) {
+	        if (!passwordEncoder.matches(nowPassword, user.getPassword())) {
 	            throw new BusinessException("Senha atual informada não coincide com a senha do usuário.");
 	        }
 	        
-	        user.setPassword(newPassword);
+	        user.setPassword(passwordEncoder.encode(newPassword));
 	}
 	
 

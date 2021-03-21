@@ -42,13 +42,10 @@ public class User {
 	@CreationTimestamp
 	private OffsetDateTime created;
 
-	public boolean passwordWithEquals(String password) {
-		return getPassword().equals(password);
+	public boolean isNew() {
+	    return getId() == null;
 	}
 
-	public boolean passwordNotWithEquals(String password) {
-		return !passwordWithEquals(password);
-	}
 	
 	public boolean removeGroup(Group group) {
 	    return getGroups().remove(group);

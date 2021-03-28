@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +47,7 @@ public class KitchenController {
 	@Autowired
 	private KitchenInputDisassembler kitchenInputDisassembler;
 
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping()
 	public Page<KitchenModel> list(@PageableDefault(size = 10) Pageable pageable) {
 		Page<Kitchen> kitchens =  kitchenRepository.findAll(pageable);
@@ -59,11 +61,13 @@ public class KitchenController {
 	
 	}
 
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/{id}")
 	public KitchenModel find(@PathVariable Long id) {
 		return kitchenModelAssembler.toModel(kitchenService.findOrFail(id));
 	}
 
+	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public KitchenModel save(@RequestBody @Valid KitchenInput kitchenInput) {
@@ -77,6 +81,7 @@ public class KitchenController {
 		}
 	}
 
+	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
 	@PutMapping("/{id}")
 	public KitchenModel update(@PathVariable Long id, @RequestBody @Valid KitchenInput kitchenInput) {
 		try {
@@ -108,6 +113,7 @@ public class KitchenController {
 	 * } }
 	 */
 
+	@PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value = HttpStatus.NOT_FOUND)
 	public void remove(@PathVariable Long id) {

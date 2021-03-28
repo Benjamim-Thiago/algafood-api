@@ -10,7 +10,8 @@ public enum ProblemType {
 	INCOMPATIBLE_BODY("/incompatible-body", "Corpo da mensagem JSON com erro"),
 	RESOURCE_NOT_FOUND("/resource-not-found", "Recurso não encontrado"),
 	ENTITY_IN_USE("/entity-in-use", "Entidade em uso"),
-	BUSINESS_ERROR("/business-error", "Violação de regra de negócio");
+	BUSINESS_ERROR("/business-error", "Violação de regra de negócio"),
+	ACCESS_DENIED("/access-denied", "Acesso negado");
 	
 	private String title;
 	private String uri;

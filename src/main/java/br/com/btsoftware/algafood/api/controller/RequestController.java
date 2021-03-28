@@ -26,6 +26,7 @@ import br.com.btsoftware.algafood.api.model.RequestModel;
 import br.com.btsoftware.algafood.api.model.RequestResumeModel;
 import br.com.btsoftware.algafood.api.model.input.RequestInput;
 import br.com.btsoftware.algafood.core.data.PageableTranslator;
+import br.com.btsoftware.algafood.core.security.AlgaSecurity;
 import br.com.btsoftware.algafood.domain.exception.BusinessException;
 import br.com.btsoftware.algafood.domain.exception.EntityNotExistException;
 import br.com.btsoftware.algafood.domain.filter.RequestFilter;
@@ -57,6 +58,9 @@ public class RequestController {
 	@Autowired
 	private RequestInputDisassembler requestInputDisassembler;
 
+	@Autowired
+	private AlgaSecurity algaSecurity;
+	
 	@GetMapping
 	public Page<RequestResumeModel> search(RequestFilter filter, @PageableDefault(size = 10) Pageable pageable) {
 
@@ -85,9 +89,9 @@ public class RequestController {
 		try {
 			Request newRequest = requestInputDisassembler.toDomainObject(requestInput);
 
-			// TODO pegar usuário autenticado
+			
 			newRequest.setClient(new User());
-			newRequest.getClient().setId(1L);
+			newRequest.getClient().setId(algaSecurity.getUserId());
 
 			newRequest = issueRequestService.save(newRequest);
 
